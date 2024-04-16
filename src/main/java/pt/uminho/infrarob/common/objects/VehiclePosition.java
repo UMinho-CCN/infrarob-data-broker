@@ -68,7 +68,19 @@ public class VehiclePosition {
                 "\"vehicleID\":\"" + vehicleID + "\"," +
                 "\"vehicleType\":\"" + vehicleType + "\"," +
                 "\"lat\":\"" + lat + "\"," +
-                "\"lon\":\"" + lon + "\"" +
+                "\"lon\":\"" + lon + "\"," +
+                "\"lastUpdate\":\"" + lastUpdate + "\"" +
+                '}';
+    }
+
+    public String toStringWithID(long id) {
+        return "{" +
+                "\"vehicleID\":\"" + vehicleID + "\"," +
+                "\"vehicleType\":\"" + vehicleType + "\"," +
+                "\"lat\":\"" + lat + "\"," +
+                "\"lon\":\"" + lon + "\"," +
+                "\"lastUpdate\":\"" + lastUpdate + "\"," +
+                "\"messageID\":\"" + id + "\"" +
                 '}';
     }
 }
