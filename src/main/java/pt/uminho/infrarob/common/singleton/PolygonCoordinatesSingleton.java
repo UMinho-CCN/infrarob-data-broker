@@ -2,15 +2,20 @@ package pt.uminho.infrarob.common.singleton;
 
 import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PolygonCoordinatesSingleton {
     static private PolygonCoordinatesSingleton instance = null;
     private List<PolygonCoordinates> polygonCoordinates;
+    private Path2D path2D;
+
 
     private PolygonCoordinatesSingleton() {
         this.polygonCoordinates = new ArrayList<>();
+        path2D = new Path2D.Double();
     }
 
     public static PolygonCoordinatesSingleton getIntance(){
@@ -23,6 +28,24 @@ public class PolygonCoordinatesSingleton {
 
     public void addCoordinates(List<PolygonCoordinates> polygonCoordinates){
         this.polygonCoordinates = polygonCoordinates;
+        createPath();
+    }
+
+    private void createPath(){
+        path2D = new Path2D.Double();
+
+        for (int i = 0; i < this.polygonCoordinates.size(); i++) {
+            PolygonCoordinates coordinates = this.polygonCoordinates.get(i);
+            if(i == 0){
+                path2D.moveTo(coordinates.getLat(), coordinates.getLng());
+            }else{
+                path2D.lineTo(coordinates.getLat(), coordinates.getLng());
+            }
+        }
+    }
+
+    public boolean isInside(double lat, double lng){
+        return path2D.contains(new Point2D.Double(lat, lng));
     }
 
     public List<PolygonCoordinates> getCoordinates(){

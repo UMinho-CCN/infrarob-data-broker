@@ -40,6 +40,10 @@ public class VehicleDataShare {
         veh.setLon(vehiclePosition.getLon());
     }
 
+    public VehiclePosition getVehiclePosition(String id){
+        return vehiclePositionMap.get(id);
+    }
+
     public void removePosition(String id){
         vehiclePositionMap.remove(id);
     }

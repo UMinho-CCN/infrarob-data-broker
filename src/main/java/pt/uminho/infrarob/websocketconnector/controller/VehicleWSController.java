@@ -19,7 +19,6 @@ public class VehicleWSController {
         List<VehiclePosition> positionList = VehicleDataShare.getInstance().getList();
         VehicleResponseData vehicleResponseData = new VehicleResponseData();
         vehicleResponseData.setPositionList(positionList);
-        System.out.println("position list: " + positionList);
         return vehicleResponseData;
     }
     @MessageMapping("/poylgon-coordinates")

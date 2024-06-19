@@ -7,6 +7,8 @@ public class VehiclePosition {
     private String lon;
     private long lastUpdate;
 
+    private boolean isInside;
+
     public VehiclePosition() {
     }
 
@@ -14,12 +16,13 @@ public class VehiclePosition {
         this.vehicleID = vehicleID;
     }
 
-    public VehiclePosition(String vehicleID, String vehicleType, String lat, String lon, long lastUpdate) {
+    public VehiclePosition(String vehicleID, String vehicleType, String lat, String lon, long lastUpdate, boolean isInside) {
         this.vehicleID = vehicleID;
         this.vehicleType = vehicleType;
         this.lat = lat;
         this.lon = lon;
         this.lastUpdate = lastUpdate;
+        this.isInside = isInside;
     }
 
     public String getVehicleID() {
@@ -60,6 +63,14 @@ public class VehiclePosition {
 
     public void setLastUpdate(long lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public boolean isInside() {
+        return isInside;
+    }
+
+    public void setInside(boolean inside) {
+        isInside = inside;
     }
 
     @Override
