@@ -18,8 +18,8 @@ public class UDPService {
     public void receive(Message message){
         String data = new String((byte[]) message.getPayload());
         String posData[] = data.split(";");
-        double lon = Double.parseDouble(posData[1])/10000000;
-        double lat = Double.parseDouble(posData[2])/10000000;
+        double lon = Double.parseDouble(posData[2]);///10000000;
+        double lat = Double.parseDouble(posData[1]);///10000000;
 
         System.out.println("Received Data: " + data);
 
