@@ -4,7 +4,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import pt.uminho.infrarob.common.objects.VehiclePosition;
+import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 import pt.uminho.infrarob.common.singleton.VehicleDataShare;
+import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
 import pt.uminho.infrarob.websocketconnector.objects.VehicleResponseData;
 
 import java.util.List;
@@ -20,4 +22,11 @@ public class VehicleWSController {
         System.out.println("position list: " + positionList);
         return vehicleResponseData;
     }
+    @MessageMapping("/poylgon-coordinates")
+    @SendTo("/topic/polygon-created")
+    public String setPolygonCoordinates(List<PolygonCoordinates> coordinates){
+        PolygonCoordinatesSingleton.getIntance().addCoordinates(coordinates);
+        return "done";
+    }
+
 }
