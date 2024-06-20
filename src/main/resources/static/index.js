@@ -2,8 +2,9 @@ let map;
 let marker = new Map();
 let squareCoords = [];
 let wzSquare;
+let infoWindow;
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/infrarob-data'
+    brokerURL: 'ws://localhost:8080/infrarob-data',
 });
 
 stompClient.onConnect = (frame) => {
@@ -13,6 +14,20 @@ stompClient.onConnect = (frame) => {
     });
     stompClient.subscribe('/topic/polygon-created', (vehicle_data) => {
         showPolygon();
+    });
+    stompClient.subscribe('/topic/safe-zone-infraction', (vehicle_data) => {
+        console.log(JSON.parse(vehicle_data.body));
+        let data = JSON.parse(vehicle_data.body);
+        console.log(data.vehiclePosition.lat)
+        const myLatlng = {lat: parseFloat(data.vehiclePosition.lat), lng: parseFloat(data.vehiclePosition.lon)};
+        console.log(myLatlng)
+        infoWindow = new google.maps.InfoWindow({
+            position: myLatlng,
+        });
+        infoWindow.setContent(
+            JSON.stringify(data.message + " " + data.vehiclePosition.lat + ", " + data.vehiclePosition.lon, null, 2),
+        );
+        infoWindow.open(map);
     });
 };
 
@@ -50,11 +65,11 @@ function sendPolygonCoordinates() {
 }
 
 function showPosiotionData(positions) {
-    console.log(positions.positionList.length);
+    //console.log(positions.positionList.length);
     let i = 0;
     while ( i < positions.positionList.length){
         var pos = positions.positionList[i];
-        console.log(pos);
+        //console.log(pos);
         moveMarker(pos["vehicleID"], parseFloat(pos["lat"]), parseFloat(pos["lon"]));
         i++;
     }
@@ -101,10 +116,10 @@ async function showPolygon(){
 
 async function moveMarker(id, lat, lon){
 
-    console.log(marker)
-    console.log("move marker");
+    //console.log(marker)
+    //console.log("move marker");
     if(!marker.has(id)){
-        console.log("not exists -> creating");
+        //console.log("not exists -> creating");
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
         marker.set(id,new AdvancedMarkerElement(
             {
@@ -115,7 +130,6 @@ async function moveMarker(id, lat, lon){
 
 
     }else{
-        console.log("moving");
         marker.get(id).position = (new google.maps.LatLng(lat,lon));
     }
 }
