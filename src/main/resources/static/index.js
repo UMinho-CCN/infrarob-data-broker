@@ -1,6 +1,6 @@
 let map;
 let marker = new Map();
-let squareCoords = [];
+
 let wzSquare;
 let infoWindow;
 const stompClient = new StompJs.Client({
@@ -8,22 +8,25 @@ const stompClient = new StompJs.Client({
 });
 
 stompClient.onConnect = (frame) => {
+
     console.log('Connected: ' + frame);
+
+    getPolygonCoordinates();
+
     stompClient.subscribe('/topic/positioning-data', (vehicle_data) => {
         showPosiotionData(JSON.parse(vehicle_data.body));
     });
-    stompClient.subscribe('/topic/polygon-created', (vehicle_data) => {
-        showPolygon();
+    stompClient.subscribe('/topic/polygon-created', (polygon_coordinates) => {
+        showPolygon(JSON.parse(polygon_coordinates.body));
     });
     stompClient.subscribe('/topic/safe-zone-infraction', (vehicle_data) => {
-        console.log(JSON.parse(vehicle_data.body));
         let data = JSON.parse(vehicle_data.body);
-        console.log(data.vehiclePosition.lat)
         const myLatlng = {lat: parseFloat(data.vehiclePosition.lat), lng: parseFloat(data.vehiclePosition.lon)};
-        console.log(myLatlng)
+
         infoWindow = new google.maps.InfoWindow({
             position: myLatlng,
         });
+
         infoWindow.setContent(
             JSON.stringify(data.message + " " + data.vehiclePosition.lat + ", " + data.vehiclePosition.lon, null, 2),
         );
@@ -39,6 +42,7 @@ stompClient.onStompError = (frame) => {
     console.error('Broker reported error: ' + frame.headers['message']);
     console.error('Additional details: ' + frame.body);
 };
+
 
 function connect() {
     stompClient.activate();
@@ -57,10 +61,18 @@ function pullData() {
     });
 }
 
-function sendPolygonCoordinates() {
+function sendPolygonCoordinates(coordinates) {
     stompClient.publish({
         destination: "/app/poylgon-coordinates",
-        body: JSON.stringify(squareCoords)
+        body: JSON.stringify(coordinates)
+    });
+}
+
+function getPolygonCoordinates() {
+    console.log("get polygon data")
+    stompClient.publish({
+        destination: "/app/poylgon-coordinates-get",
+        body: "",
     });
 }
 
@@ -92,26 +104,29 @@ async function initMap() {
 }
 
 function clickLatLon(mapsMouseEvent){
-    squareCoords.push(mapsMouseEvent.latLng.toJSON());
-    sendPolygonCoordinates();
+    sendPolygonCoordinates(mapsMouseEvent.latLng.toJSON());
 }
 
-async function showPolygon(){
-    if(squareCoords.length == 4){
-        wzSquare = new google.maps.Polygon({
-            paths: squareCoords,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35,
-        });
-        wzSquare.setMap(map);
-    }else if(squareCoords.length >4){
-        //wzSquare = new google.maps.Polygon({});
-        squareCoords = [];
+async function showPolygon(squareCoords){
+    if(squareCoords.length < 1){
+        return;
+    }
+
+    if(wzSquare != null) {
         wzSquare.setMap(null);
     }
+    //squareCoords.push(mapsMouseEvent.latLng.toJSON());
+
+    wzSquare = new google.maps.Polygon({
+        paths: squareCoords,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+    });
+    wzSquare.setMap(map);
+
 }
 
 async function moveMarker(id, lat, lon){
@@ -134,11 +149,7 @@ async function moveMarker(id, lat, lon){
     }
 }
 
-
-
-
 initMap();
 connect();
+
 setInterval(pullData, 1000);
-
-
