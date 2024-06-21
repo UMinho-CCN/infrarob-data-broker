@@ -31,6 +31,13 @@ public class PolygonCoordinatesSingleton {
         createPath();
     }
 
+    public void addCoordinate(PolygonCoordinates polygonCoordinates){
+        if(this.polygonCoordinates.size() >= 4){
+            this.polygonCoordinates = new ArrayList<>();
+        }
+        this.polygonCoordinates.add(polygonCoordinates);
+    }
+
     private void createPath(){
         path2D = new Path2D.Double();
 

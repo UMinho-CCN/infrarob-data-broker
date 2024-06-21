@@ -33,9 +33,17 @@ public class VehicleWSController {
     }
     @MessageMapping("/poylgon-coordinates")
     @SendTo("/topic/polygon-created")
-    public String setPolygonCoordinates(List<PolygonCoordinates> coordinates){
-        PolygonCoordinatesSingleton.getIntance().addCoordinates(coordinates);
-        return "done";
+    public List<PolygonCoordinates> setPolygonCoordinates(PolygonCoordinates coordinate){
+        PolygonCoordinatesSingleton.getIntance().addCoordinate(coordinate);
+        List<PolygonCoordinates> polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates();
+        return polygonCoordinates;
+    }
+
+    @MessageMapping("/poylgon-coordinates-get")
+    @SendTo("/topic/polygon-created")
+    public List<PolygonCoordinates> getPolygonCoordinates(){
+        List<PolygonCoordinates> polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates();
+        return polygonCoordinates;
     }
 
 }
