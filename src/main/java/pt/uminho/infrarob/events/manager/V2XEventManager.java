@@ -17,7 +17,7 @@ import pt.uminho.infrarob.events.events.V2XMessageReceivedEvent;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class EventManager {
+public class V2XEventManager {
     private long ID = 0;
 
     @Autowired
@@ -34,8 +34,6 @@ public class EventManager {
         VehiclePosition vehiclePosition = VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID());
 
         boolean pastInside = vehiclePosition == null ? isInside : vehiclePosition.isInside();
-
-        System.out.println("past: " + pastInside + " now: " + isInside);
 
         if(pastInside && !isInside){
             SafeZoneInfractionEvent event = new SafeZoneInfractionEvent(this, vehiclePosition);
