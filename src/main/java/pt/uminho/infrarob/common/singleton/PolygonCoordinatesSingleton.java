@@ -36,6 +36,9 @@ public class PolygonCoordinatesSingleton {
             this.polygonCoordinates = new ArrayList<>();
         }
         this.polygonCoordinates.add(polygonCoordinates);
+        if(this.polygonCoordinates.size() > 2){
+            createPath();
+        }
     }
 
     private void createPath(){

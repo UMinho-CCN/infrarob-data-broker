@@ -1,6 +1,7 @@
 package pt.uminho.infrarob.websocketconnector.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -19,9 +20,6 @@ import java.util.Objects;
 
 @Controller
 public class VehicleWSController {
-    private final String WARNING_TOPIC = "/topic/safe-zone-infraction";
-    @Autowired
-    private WebSocketService webSocketService;
 
     @MessageMapping("/vehicledata")
     @SendTo("/topic/positioning-data")
@@ -31,19 +29,6 @@ public class VehicleWSController {
         vehicleResponseData.setPositionList(positionList);
         return vehicleResponseData;
     }
-    @MessageMapping("/poylgon-coordinates")
-    @SendTo("/topic/polygon-created")
-    public List<PolygonCoordinates> setPolygonCoordinates(PolygonCoordinates coordinate){
-        PolygonCoordinatesSingleton.getIntance().addCoordinate(coordinate);
-        List<PolygonCoordinates> polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates();
-        return polygonCoordinates;
-    }
 
-    @MessageMapping("/poylgon-coordinates-get")
-    @SendTo("/topic/polygon-created")
-    public List<PolygonCoordinates> getPolygonCoordinates(){
-        List<PolygonCoordinates> polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates();
-        return polygonCoordinates;
-    }
 
 }
