@@ -31,11 +31,12 @@ public class PolygonCoordinatesSingleton {
         createPath();
     }
 
-    public void addCoordinate(PolygonCoordinates polygonCoordinates){
+
+    public void addCoordinate(PolygonCoordinates polygonCoordinates, int position){
         if(this.polygonCoordinates.size() >= 4){
             this.polygonCoordinates = new ArrayList<>();
         }
-        this.polygonCoordinates.add(polygonCoordinates);
+        this.polygonCoordinates.add(position, polygonCoordinates);
         if(this.polygonCoordinates.size() > 2){
             createPath();
         }

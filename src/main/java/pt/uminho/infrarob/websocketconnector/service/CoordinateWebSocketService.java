@@ -27,7 +27,6 @@ public class CoordinateWebSocketService {
     @EventListener
     public void sendWarning(BroadcastCoordinatesEvent event){
         List<PolygonCoordinates> polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates();
-        System.out.println(polygonCoordinates);
         simpMessagingTemplate.convertAndSend(TOPIC,polygonCoordinates);
     }
 }
