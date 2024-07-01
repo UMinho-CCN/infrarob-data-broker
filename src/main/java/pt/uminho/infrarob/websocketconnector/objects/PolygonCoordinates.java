@@ -1,12 +1,14 @@
 package pt.uminho.infrarob.websocketconnector.objects;
 
 public class PolygonCoordinates {
+    private int position;
     private double lat;
     private double lng;
 
-    public PolygonCoordinates(double lat, double lon) {
+    public PolygonCoordinates(double lat, double lon, int position) {
         this.lat = lat;
         this.lng = lon;
+        this.position = position;
     }
 
     public double getLat() {
@@ -23,6 +25,14 @@ public class PolygonCoordinates {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

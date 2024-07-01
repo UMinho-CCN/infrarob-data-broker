@@ -40,9 +40,9 @@ public class PostConstructInit {
         for (int i = 0; i < lat.length; i++) {
             String lats = lat[i];
             String lngs = lng[i];
-            PolygonCoordinates polygonCoordinates = new PolygonCoordinates(Double.parseDouble(lats), Double.parseDouble(lngs));
-            PolygonCoordinateEvent polygonCoordinateEvent = new PolygonCoordinateEvent(this,polygonCoordinates, PolygonDataSource.CONFIG_FILE);
-            PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates);
+            PolygonCoordinates polygonCoordinates = new PolygonCoordinates(Double.parseDouble(lats), Double.parseDouble(lngs), i);
+            //PolygonCoordinateEvent polygonCoordinateEvent = new PolygonCoordinateEvent(this,polygonCoordinates, PolygonDataSource.CONFIG_FILE);
+            PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates, i);
         }
     }
 }
