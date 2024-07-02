@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import pt.uminho.infrarob.common.objects.Brokers;
 import pt.uminho.infrarob.common.objects.PolygonDataSource;
 import pt.uminho.infrarob.common.objects.VehiclePosition;
 import pt.uminho.infrarob.common.singleton.MqttConnectionShare;
@@ -15,6 +16,7 @@ import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 import pt.uminho.infrarob.common.singleton.VehicleDataShare;
 import pt.uminho.infrarob.events.events.PolygonCoordinateEvent;
 import pt.uminho.infrarob.events.events.SafeZoneInfractionEvent;
+import pt.uminho.infrarob.events.events.SpeedInfractionEvent;
 import pt.uminho.infrarob.events.events.V2XMessageReceivedEvent;
 import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
 
@@ -37,59 +39,102 @@ public class V2XEventManager {
     @Value("${polygon.src.station}")
     private String [] polygonSRCs;
 
+    @Value("${storage.cash:true}")
+    private boolean storeInCash;
+
+    @Value("${forward.enable:false}")
+    private boolean sendToBroker;
+
+    @Value("${forward.broker:MQTT}")
+    private Brokers broker;
+
+    @Value(("${infraction.speed}"))
+    private int speed;
+
+    @Value(("${infraction.jerks}"))
+    private int jerks;
+
     @Async
     @EventListener
     public void handleReceivedV2XMessage(V2XMessageReceivedEvent message){
-        if(message.isStoreInCash()){
-            VehicleDataShare.getInstance().addVehiclePosition(message.getVehiclePosition());
+        VehiclePosition vehiclePosition = message.getVehiclePosition();
+        handleStorage(vehiclePosition);
+        handleForward(vehiclePosition);
+
+        boolean isPolygon = handlePolygon(vehiclePosition);
+
+
+        if(!isPolygon) {
+            handleSafeZone(vehiclePosition);
         }
-        if(message.isSendToMQTT()){
+
+        checkSpeed(vehiclePosition);
+    }
+
+    private void handleStorage(VehiclePosition vehiclePosition){
+        if(storeInCash){
+            VehicleDataShare.getInstance().addVehiclePosition(vehiclePosition);
+        }
+    }
+
+    private void handleForward(VehiclePosition vehiclePosition) {
+        if (!sendToBroker) {
+            return;
+        }
+
+        if (broker == Brokers.MQTT) {
             try {
-                MqttMessage mqttMessage = new MqttMessage(message.getVehiclePosition().toStringWithID(ID).getBytes(StandardCharsets.UTF_8));
+                MqttMessage mqttMessage = new MqttMessage(vehiclePosition.toStringWithID(ID).getBytes(StandardCharsets.UTF_8));
                 MqttConnectionShare.getInstance().publishToClient(mqttMessage);
                 ID++;
             } catch (MqttException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
 
-        boolean isPolygon = false;
+    private boolean handlePolygon(VehiclePosition vehiclePosition){
         if(polygonSource == PolygonDataSource.V2X){
             List<String> srcs = Arrays.asList(polygonSRCs);
-            int stationIndex = srcs.indexOf(message.getVehiclePosition().getVehicleID());
+            int stationIndex = srcs.indexOf(vehiclePosition.getVehicleID());
             if(stationIndex >= 0) {
                 System.out.println();
                 PolygonCoordinateEvent polygonCoordinateEvent = new PolygonCoordinateEvent(
                         this,
                         new PolygonCoordinates(
-                                Double.parseDouble(message.getVehiclePosition().getLat()),
-                                Double.parseDouble(message.getVehiclePosition().getLon()),
+                                Double.parseDouble(vehiclePosition.getLat()),
+                                Double.parseDouble(vehiclePosition.getLon()),
                                 stationIndex),
                         polygonSource);
                 applicationEventPublisher.publishEvent(polygonCoordinateEvent);
-                isPolygon = true;
+                return true;
             }
         }
+        return false;
+    }
 
-    if(!isPolygon) {
+    private void handleSafeZone(VehiclePosition vehiclePosition){
         boolean isInside = PolygonCoordinatesSingleton.getIntance().isInside(
-                Double.parseDouble(message.getVehiclePosition().getLat()),
-                Double.parseDouble(message.getVehiclePosition().getLon()));
+                Double.parseDouble(vehiclePosition.getLat()),
+                Double.parseDouble(vehiclePosition.getLon()));
 
-        VehiclePosition vehiclePosition = VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID());
+        VehiclePosition pastPosition = VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID());
 
-        boolean pastInside = vehiclePosition == null ? isInside : vehiclePosition.isInside();
+        boolean pastInside = pastPosition == null ? isInside : pastPosition.isInside();
 
         if (pastInside && !isInside) {
-            SafeZoneInfractionEvent event = new SafeZoneInfractionEvent(this, vehiclePosition);
+            SafeZoneInfractionEvent event = new SafeZoneInfractionEvent(this, pastPosition);
             applicationEventPublisher.publishEvent(event);
         }
 
-        VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID()).setInside(isInside);
+        VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID()).setInside(isInside);
     }
 
-
-
-
+    private void checkSpeed(VehiclePosition vehiclePosition){
+        if(vehiclePosition.getSpeed() > speed){
+            SpeedInfractionEvent speedInfractionEvent = new SpeedInfractionEvent(this, vehiclePosition);
+            applicationEventPublisher.publishEvent(speedInfractionEvent);
+        }
     }
+
 }
