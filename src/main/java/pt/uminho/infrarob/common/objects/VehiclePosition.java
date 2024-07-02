@@ -9,6 +9,9 @@ public class VehiclePosition {
 
     private boolean isInside;
 
+    private int speed;
+    private int acc;
+
     public VehiclePosition() {
     }
 
@@ -16,13 +19,15 @@ public class VehiclePosition {
         this.vehicleID = vehicleID;
     }
 
-    public VehiclePosition(String vehicleID, String vehicleType, String lat, String lon, long lastUpdate, boolean isInside) {
+    public VehiclePosition(String vehicleID, String vehicleType, String lat, String lon, long lastUpdate, int speed, int acc ,boolean isInside) {
         this.vehicleID = vehicleID;
         this.vehicleType = vehicleType;
         this.lat = lat;
         this.lon = lon;
         this.lastUpdate = lastUpdate;
         this.isInside = isInside;
+        this.speed = speed;
+        this.acc = acc;
     }
 
     public String getVehicleID() {
@@ -73,14 +78,33 @@ public class VehiclePosition {
         isInside = inside;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getAcc() {
+        return acc;
+    }
+
+    public void setAcc(int acc) {
+        this.acc = acc;
+    }
+
     @Override
     public String toString() {
-        return "{" +
-                "\"vehicleID\":\"" + vehicleID + "\"," +
-                "\"vehicleType\":\"" + vehicleType + "\"," +
-                "\"lat\":\"" + lat + "\"," +
-                "\"lon\":\"" + lon + "\"," +
-                "\"lastUpdate\":\"" + lastUpdate + "\"" +
+        return "VehiclePosition{" +
+                "vehicleID='" + vehicleID + '\'' +
+                ", vehicleType='" + vehicleType + '\'' +
+                ", lat='" + lat + '\'' +
+                ", lon='" + lon + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", isInside=" + isInside +
+                ", speed=" + speed +
+                ", acc=" + acc +
                 '}';
     }
 
@@ -90,6 +114,8 @@ public class VehiclePosition {
                 "\"vehicleType\":\"" + vehicleType + "\"," +
                 "\"lat\":\"" + lat + "\"," +
                 "\"lon\":\"" + lon + "\"," +
+                "\"speed\":\"" + speed + "\"," +
+                "\"acc\":\"" + acc + "\"," +
                 "\"lastUpdate\":\"" + lastUpdate + "\"," +
                 "\"messageID\":\"" + id + "\"" +
                 '}';

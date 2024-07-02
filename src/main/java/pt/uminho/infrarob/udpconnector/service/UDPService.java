@@ -19,16 +19,17 @@ public class UDPService {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
     private long ID = 0;
-    private boolean sendToMQTT = true;
     public void receive(Message message){
         String data = new String((byte[]) message.getPayload());
         String posData[] = data.split(";");
         double lon = Double.parseDouble(posData[2]);///10000000;
         double lat = Double.parseDouble(posData[1]);///10000000;
+        int speed = Integer.parseInt(posData[3]);
+        int acc = Integer.parseInt(posData[4]);
 
-        VehiclePosition vehiclePosition = new VehiclePosition(posData[0], "", String.valueOf(lat), String.valueOf(lon), System.currentTimeMillis(), false);
+        VehiclePosition vehiclePosition = new VehiclePosition(posData[0], "", String.valueOf(lat), String.valueOf(lon), System.currentTimeMillis(), speed, acc, false);
 
-        V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, vehiclePosition, true, sendToMQTT);
+        V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, vehiclePosition);
         applicationEventPublisher.publishEvent(event);
     }
 }
