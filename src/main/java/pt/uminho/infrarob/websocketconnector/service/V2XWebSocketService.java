@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import pt.uminho.infrarob.common.objects.V2XWarning;
 import pt.uminho.infrarob.common.objects.WarningType;
+import pt.uminho.infrarob.events.events.JerkInfractionEvent;
 import pt.uminho.infrarob.events.events.SafeZoneInfractionEvent;
 import pt.uminho.infrarob.events.events.SpeedInfractionEvent;
 
@@ -30,6 +31,13 @@ public class V2XWebSocketService {
     @EventListener
     public  void sendSpeedInfractionWarning(SpeedInfractionEvent speedInfractionEvent){
         V2XWarning v2XWarning = new V2XWarning("Excess Speed", speedInfractionEvent.getVehiclePosition(), WarningType.SPEED_INFRACTION);
+        simpMessagingTemplate.convertAndSend(TOPIC, v2XWarning);
+    }
+
+    @Async
+    @EventListener
+    public void sendJerkInfractionWarning(JerkInfractionEvent event){
+        V2XWarning v2XWarning = new V2XWarning("Jerks warning", event.getVehiclePosition(), WarningType.JERK_INFRACTION);
         simpMessagingTemplate.convertAndSend(TOPIC, v2XWarning);
     }
 }
