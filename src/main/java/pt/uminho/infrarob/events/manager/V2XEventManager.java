@@ -14,10 +14,7 @@ import pt.uminho.infrarob.common.objects.VehiclePosition;
 import pt.uminho.infrarob.common.singleton.MqttConnectionShare;
 import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 import pt.uminho.infrarob.common.singleton.VehicleDataShare;
-import pt.uminho.infrarob.events.events.PolygonCoordinateEvent;
-import pt.uminho.infrarob.events.events.SafeZoneInfractionEvent;
-import pt.uminho.infrarob.events.events.SpeedInfractionEvent;
-import pt.uminho.infrarob.events.events.V2XMessageReceivedEvent;
+import pt.uminho.infrarob.events.events.*;
 import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
 
 import java.nio.DoubleBuffer;
@@ -49,10 +46,10 @@ public class V2XEventManager {
     private Brokers broker;
 
     @Value(("${infraction.speed}"))
-    private int speed;
+    private int speedThreshold;
 
     @Value(("${infraction.jerks}"))
-    private int jerks;
+    private int jerkThreshold;
 
     @Async
     @EventListener
@@ -69,6 +66,7 @@ public class V2XEventManager {
         }
 
         checkSpeed(vehiclePosition);
+        checkJerk(vehiclePosition);
     }
 
     private void handleStorage(VehiclePosition vehiclePosition){
@@ -131,9 +129,23 @@ public class V2XEventManager {
     }
 
     private void checkSpeed(VehiclePosition vehiclePosition){
-        if(vehiclePosition.getSpeed() > speed){
+        if(vehiclePosition.getSpeed() > speedThreshold){
             SpeedInfractionEvent speedInfractionEvent = new SpeedInfractionEvent(this, vehiclePosition);
             applicationEventPublisher.publishEvent(speedInfractionEvent);
+        }
+    }
+
+    private void checkJerk(VehiclePosition vehiclePosition){
+        //double jerk = diffAcc/((double)(getOperatingSystem().getSimulationTime()-lastEvent)/(double)TIME.SECOND);
+        VehiclePosition pastPosition = VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID());
+        double acc = Math.abs(vehiclePosition.getAcc() - pastPosition.getAcc());
+        long time = vehiclePosition.getLastUpdate() - pastPosition.getLastUpdate();
+
+        double jerk = acc/time;
+
+        if(jerk > jerkThreshold){
+            JerkInfractionEvent event = new JerkInfractionEvent(this, vehiclePosition);
+            applicationEventPublisher.publishEvent(event);
         }
     }
 
