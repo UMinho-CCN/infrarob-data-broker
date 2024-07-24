@@ -1,7 +1,5 @@
 package pt.uminho.infrarob.events.manager;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -9,23 +7,21 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import pt.uminho.infrarob.common.objects.Brokers;
+import pt.uminho.infrarob.common.objects.V2XWarning;
+import pt.uminho.infrarob.common.objects.WarningType;
+import pt.uminho.infrarob.common.objects.internal.InternalEventData;
+import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 import pt.uminho.infrarob.common.objects.PolygonDataSource;
-import pt.uminho.infrarob.common.objects.VehiclePosition;
-import pt.uminho.infrarob.common.singleton.MqttConnectionShare;
+import pt.uminho.infrarob.common.objects.ws.PolygonCoordinatesWS;
 import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 import pt.uminho.infrarob.common.singleton.VehicleDataShare;
 import pt.uminho.infrarob.events.events.*;
-import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
 
-import java.nio.DoubleBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class V2XEventManager {
-    private long ID = 0;
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -54,69 +50,73 @@ public class V2XEventManager {
     @Async
     @EventListener
     public void handleReceivedV2XMessage(V2XMessageReceivedEvent message){
-        VehiclePosition vehiclePosition = message.getVehiclePosition();
-        handleStorage(vehiclePosition);
-        handleForward(vehiclePosition);
+        InternalObjectData internalObjectData = message.getVehiclePosition();
+        handleStorage(internalObjectData);
+        handleForward(internalObjectData);
 
-        boolean isPolygon = handlePolygon(vehiclePosition);
+        boolean isPolygon = handlePolygon(internalObjectData);
 
 
         if(!isPolygon) {
-            handleSafeZone(vehiclePosition);
+            handleSafeZone(internalObjectData);
         }
 
-        checkSpeed(vehiclePosition);
-        checkJerk(vehiclePosition);
+        checkSpeed(internalObjectData);
+        checkJerk(internalObjectData);
     }
 
-    private void handleStorage(VehiclePosition vehiclePosition){
+    private void handleStorage(InternalObjectData internalObjectData){
         if(storeInCash){
-            VehicleDataShare.getInstance().addVehiclePosition(vehiclePosition);
+            VehicleDataShare.getInstance().addVehiclePosition(internalObjectData);
         }
     }
 
-    private void handleForward(VehiclePosition vehiclePosition) {
+    private void handleForward(InternalObjectData internalObjectData) {
         if (!sendToBroker) {
             return;
         }
 
         if (broker == Brokers.MQTT) {
-            try {
-                MqttMessage mqttMessage = new MqttMessage(vehiclePosition.toStringWithID(ID).getBytes(StandardCharsets.UTF_8));
-                MqttConnectionShare.getInstance().publishToClient(mqttMessage);
-                ID++;
-            } catch (MqttException e) {
-                throw new RuntimeException(e);
-            }
+            MQTTEvent mqttEvent = new MQTTEvent(this, internalObjectData, null);
+            applicationEventPublisher.publishEvent(mqttEvent);
         }
     }
 
-    private boolean handlePolygon(VehiclePosition vehiclePosition){
+    private boolean handlePolygon(InternalObjectData internalObjectData){
         if(polygonSource == PolygonDataSource.V2X){
             List<String> srcs = Arrays.asList(polygonSRCs);
-            int stationIndex = srcs.indexOf(vehiclePosition.getVehicleID());
+            int stationIndex = srcs.indexOf(internalObjectData.getVehicleID());
             if(stationIndex >= 0) {
-                System.out.println();
                 PolygonCoordinateEvent polygonCoordinateEvent = new PolygonCoordinateEvent(
                         this,
-                        new PolygonCoordinates(
-                                Double.parseDouble(vehiclePosition.getLat()),
-                                Double.parseDouble(vehiclePosition.getLon()),
+                        new PolygonCoordinatesWS(
+                                internalObjectData.getConvertedLat(),
+                                internalObjectData.getConvertedLon(),
                                 stationIndex),
                         polygonSource);
                 applicationEventPublisher.publishEvent(polygonCoordinateEvent);
+                InternalEventData eventData = new InternalEventData();
+                eventData.setEventType(WarningType.SAFEZONE_INFRACION.toString());
+                eventData.setEventID(1);
+                eventData.setAltitude(0);
+                eventData.setLon(internalObjectData.getLon());
+                eventData.setLat(internalObjectData.getLat());
+                eventData.setRadius(0);
+
+                MQTTEvent mqttEvent = new MQTTEvent(this, internalObjectData,eventData);
+                applicationEventPublisher.publishEvent(mqttEvent);
                 return true;
             }
         }
         return false;
     }
 
-    private void handleSafeZone(VehiclePosition vehiclePosition){
+    private void handleSafeZone(InternalObjectData internalObjectData){
         boolean isInside = PolygonCoordinatesSingleton.getIntance().isInside(
-                Double.parseDouble(vehiclePosition.getLat()),
-                Double.parseDouble(vehiclePosition.getLon()));
+                internalObjectData.getConvertedLat(),
+                internalObjectData.getConvertedLon());
 
-        VehiclePosition pastPosition = VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID());
+        InternalObjectData pastPosition = VehicleDataShare.getInstance().getVehiclePosition(internalObjectData.getVehicleID());
 
         boolean pastInside = pastPosition == null ? isInside : pastPosition.isInside();
 
@@ -125,26 +125,26 @@ public class V2XEventManager {
             applicationEventPublisher.publishEvent(event);
         }
 
-        VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID()).setInside(isInside);
+        VehicleDataShare.getInstance().getVehiclePosition(internalObjectData.getVehicleID()).setInside(isInside);
     }
 
-    private void checkSpeed(VehiclePosition vehiclePosition){
-        if(vehiclePosition.getSpeed() > speedThreshold){
-            SpeedInfractionEvent speedInfractionEvent = new SpeedInfractionEvent(this, vehiclePosition);
+    private void checkSpeed(InternalObjectData internalObjectData){
+        if(internalObjectData.getSpeed() > speedThreshold){
+            SpeedInfractionEvent speedInfractionEvent = new SpeedInfractionEvent(this, internalObjectData);
             applicationEventPublisher.publishEvent(speedInfractionEvent);
         }
     }
 
-    private void checkJerk(VehiclePosition vehiclePosition){
+    private void checkJerk(InternalObjectData internalObjectData){
         //double jerk = diffAcc/((double)(getOperatingSystem().getSimulationTime()-lastEvent)/(double)TIME.SECOND);
-        VehiclePosition pastPosition = VehicleDataShare.getInstance().getVehiclePosition(vehiclePosition.getVehicleID());
-        double acc = Math.abs(vehiclePosition.getAcc() - pastPosition.getAcc());
-        long time = vehiclePosition.getLastUpdate() - pastPosition.getLastUpdate();
+        InternalObjectData pastPosition = VehicleDataShare.getInstance().getVehiclePosition(internalObjectData.getVehicleID());
+        double acc = Math.abs(internalObjectData.getAcc() - pastPosition.getAcc());
+        long time = internalObjectData.getLastUpdate() - pastPosition.getLastUpdate();
 
         double jerk = acc/time;
 
         if(jerk > jerkThreshold){
-            JerkInfractionEvent event = new JerkInfractionEvent(this, vehiclePosition);
+            JerkInfractionEvent event = new JerkInfractionEvent(this, internalObjectData);
             applicationEventPublisher.publishEvent(event);
         }
     }

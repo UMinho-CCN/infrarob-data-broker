@@ -1,11 +1,11 @@
-package pt.uminho.infrarob.websocketconnector.objects;
+package pt.uminho.infrarob.common.objects.ws;
 
-public class PolygonCoordinates {
+public class PolygonCoordinatesWS {
     private int position;
     private double lat;
     private double lng;
 
-    public PolygonCoordinates(double lat, double lon, int position) {
+    public PolygonCoordinatesWS(double lat, double lon, int position) {
         this.lat = lat;
         this.lng = lon;
         this.position = position;
@@ -37,7 +37,7 @@ public class PolygonCoordinates {
 
     @Override
     public String toString() {
-        return "PolygonCoordinates{" +
+        return "PolygonCoordinatesWS{" +
                 "lat=" + lat +
                 ", lng=" + lng +
                 '}';

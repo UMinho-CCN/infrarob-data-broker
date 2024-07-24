@@ -1,6 +1,6 @@
 package pt.uminho.infrarob.common.singleton;
 
-import pt.uminho.infrarob.common.objects.VehiclePosition;
+import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class VehicleDataShare {
-    private Map<String, VehiclePosition> vehiclePositionMap;
+    private Map<String, InternalObjectData> vehiclePositionMap;
     private static VehicleDataShare instance = null;
 
     private VehicleDataShare() {
@@ -23,24 +23,24 @@ public class VehicleDataShare {
         return instance;
     }
 
-    public void addVehiclePosition(VehiclePosition vehiclePosition){
-        VehiclePosition veh;
-        if(!vehiclePositionMap.containsKey(vehiclePosition.getVehicleID())){
-            veh = new VehiclePosition(vehiclePosition.getVehicleID());
-            veh.setVehicleType(vehiclePosition.getVehicleType());
-            vehiclePositionMap.put(vehiclePosition.getVehicleID(), vehiclePosition);
+    public void addVehiclePosition(InternalObjectData internalObjectData){
+        InternalObjectData veh;
+        if(!vehiclePositionMap.containsKey(internalObjectData.getVehicleID())){
+            veh = new InternalObjectData(internalObjectData.getVehicleID());
+            veh.setVehicleType(internalObjectData.getVehicleType());
+            vehiclePositionMap.put(internalObjectData.getVehicleID(), internalObjectData);
         }else{
-            veh = vehiclePositionMap.get(vehiclePosition.getVehicleID());
+            veh = vehiclePositionMap.get(internalObjectData.getVehicleID());
         }
 
 
 
-        veh.setLastUpdate(vehiclePosition.getLastUpdate());
-        veh.setLat(vehiclePosition.getLat());
-        veh.setLon(vehiclePosition.getLon());
+        veh.setLastUpdate(internalObjectData.getLastUpdate());
+        veh.setLat(internalObjectData.getLat());
+        veh.setLon(internalObjectData.getLon());
     }
 
-    public VehiclePosition getVehiclePosition(String id){
+    public InternalObjectData getVehiclePosition(String id){
         return vehiclePositionMap.get(id);
     }
 
@@ -48,7 +48,7 @@ public class VehicleDataShare {
         vehiclePositionMap.remove(id);
     }
 
-    public List<VehiclePosition> getList(){
+    public List<InternalObjectData> getList(){
         return new ArrayList<>(vehiclePositionMap.values());
     }
 }

@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.websocketconnector;
+package pt.uminho.infrarob.ws;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -14,6 +14,7 @@ stompClient.onConnect = (frame) => {
     getPolygonCoordinates();
 
     stompClient.subscribe('/topic/positioning-data', (vehicle_data) => {
+        console.log(vehicle_data);
         showPosiotionData(JSON.parse(vehicle_data.body));
     });
     stompClient.subscribe('/topic/polygon-created', (polygon_coordinates) => {
@@ -82,10 +83,10 @@ function showPosiotionData(positions) {
     while ( i < positions.positionList.length){
         var pos = positions.positionList[i];
         //console.log(pos);
-        moveMarker(pos["vehicleID"], parseFloat(pos["lat"]), parseFloat(pos["lon"]));
+        moveMarker(pos["objectID"], parseFloat(pos["lat"]), parseFloat(pos["lon"]));
         i++;
     }
-    //console.log(message["vehicleID"]);
+    //console.log(message["objectID"]);
 
 }
 

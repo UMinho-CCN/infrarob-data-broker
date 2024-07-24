@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.websocketconnector.controller;
+package pt.uminho.infrarob.ws.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +7,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import pt.uminho.infrarob.common.objects.PolygonDataSource;
-import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 import pt.uminho.infrarob.events.events.BroadcastCoordinatesEvent;
 import pt.uminho.infrarob.events.events.PolygonCoordinateEvent;
-import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
-
-import java.util.List;
+import pt.uminho.infrarob.common.objects.ws.PolygonCoordinatesWS;
 
 @Controller
 public class PolygonWSController {
@@ -23,7 +20,7 @@ public class PolygonWSController {
     private PolygonDataSource polygonSource;
     @MessageMapping("/poylgon-coordinates")
     //@SendTo("/topic/polygon-created")
-    public void setPolygonCoordinates(PolygonCoordinates coordinate){
+    public void setPolygonCoordinates(PolygonCoordinatesWS coordinate){
         if(polygonSource != PolygonDataSource.WEB){
             return;
         }
