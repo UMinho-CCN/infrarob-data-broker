@@ -1,22 +1,22 @@
 package pt.uminho.infrarob.events.events;
 
 import org.springframework.context.ApplicationEvent;
-import pt.uminho.infrarob.common.objects.VehiclePosition;
+import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 
 public class V2XMessageReceivedEvent extends ApplicationEvent {
-    private VehiclePosition vehiclePosition;
+    private InternalObjectData internalObjectData;
 
-    public V2XMessageReceivedEvent(Object source, VehiclePosition vehiclePosition) {
+    public V2XMessageReceivedEvent(Object source, InternalObjectData internalObjectData) {
         super(source);
-        this.vehiclePosition = vehiclePosition;
+        this.internalObjectData = internalObjectData;
     }
 
-    public VehiclePosition getVehiclePosition() {
-        return vehiclePosition;
+    public InternalObjectData getVehiclePosition() {
+        return internalObjectData;
     }
 
-    public void setVehiclePosition(VehiclePosition vehiclePosition) {
-        this.vehiclePosition = vehiclePosition;
+    public void setVehiclePosition(InternalObjectData internalObjectData) {
+        this.internalObjectData = internalObjectData;
     }
 
 }

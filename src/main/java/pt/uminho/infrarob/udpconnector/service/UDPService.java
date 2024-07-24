@@ -1,17 +1,11 @@
 package pt.uminho.infrarob.udpconnector.service;
 
-import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Service;
-import pt.uminho.infrarob.common.objects.VehiclePosition;
-import pt.uminho.infrarob.common.singleton.MqttConnectionShare;
-import pt.uminho.infrarob.common.singleton.VehicleDataShare;
+import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 import pt.uminho.infrarob.events.events.V2XMessageReceivedEvent;
-
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 
 @Service
@@ -22,14 +16,41 @@ public class UDPService {
     public void receive(Message message){
         String data = new String((byte[]) message.getPayload());
         String posData[] = data.split(";");
-        double lon = Double.parseDouble(posData[2]);///10000000;
-        double lat = Double.parseDouble(posData[1]);///10000000;
+        int lon = Integer.parseInt(posData[2]);///10000000;
+        int lat = Integer.parseInt(posData[1]);///10000000;
         int speed = Integer.parseInt(posData[3]);
         int acc = Integer.parseInt(posData[4]);
 
-        VehiclePosition vehiclePosition = new VehiclePosition(posData[0], "", String.valueOf(lat), String.valueOf(lon), System.currentTimeMillis(), speed, acc, false);
+        //String vehicleID, String vehicleType, int lat, int latConfidence, int lon,
+        // int lonConfidence, long lastUpdate, boolean isInside, int speed, int speedConfidence,
+        // int acc, int accConvidence, int heading, int headingConfidence, int length, int lengthConfidence,
+        // int lane, int laneConfidence, int altitude, int altitudeConfidene) {
 
-        V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, vehiclePosition);
+        InternalObjectData internalObjectData = new InternalObjectData(
+                posData[0],
+                "",
+                lat,
+                0,
+                lon,
+                0,
+                System.currentTimeMillis(),
+                false,
+                speed,
+                0,
+                acc,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+        );
+
+        V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, internalObjectData);
         applicationEventPublisher.publishEvent(event);
     }
 }

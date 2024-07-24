@@ -1,13 +1,16 @@
 package pt.uminho.infrarob.common.objects;
 
+import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
+import pt.uminho.infrarob.common.objects.ws.ObjectDataWS;
+
 public class V2XWarning {
     private String message;
-    private VehiclePosition vehiclePosition;
+    private ObjectDataWS objectDataWS;
     private WarningType warningType;
 
-    public V2XWarning(String message, VehiclePosition vehiclePosition, WarningType warningType) {
+    public V2XWarning(String message, ObjectDataWS objectDataWS, WarningType warningType) {
         this.message = message;
-        this.vehiclePosition = vehiclePosition;
+        this.objectDataWS = objectDataWS;
         this.warningType = warningType;
     }
 
@@ -19,12 +22,12 @@ public class V2XWarning {
         this.message = message;
     }
 
-    public VehiclePosition getVehiclePosition() {
-        return vehiclePosition;
+    public ObjectDataWS getVehiclePosition() {
+        return objectDataWS;
     }
 
-    public void setVehiclePosition(VehiclePosition vehiclePosition) {
-        this.vehiclePosition = vehiclePosition;
+    public void setVehiclePosition(ObjectDataWS internalObjectData) {
+        this.objectDataWS = internalObjectData;
     }
 
     public WarningType getWarningType() {

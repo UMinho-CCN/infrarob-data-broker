@@ -1,6 +1,6 @@
 package pt.uminho.infrarob.common.singleton;
 
-import pt.uminho.infrarob.websocketconnector.objects.PolygonCoordinates;
+import pt.uminho.infrarob.common.objects.ws.PolygonCoordinatesWS;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PolygonCoordinatesSingleton {
     static private PolygonCoordinatesSingleton instance = null;
-    private List<PolygonCoordinates> polygonCoordinates;
+    private List<PolygonCoordinatesWS> polygonCoordinates;
     private Path2D path2D;
 
 
@@ -26,13 +26,13 @@ public class PolygonCoordinatesSingleton {
         return instance;
     }
 
-    public void addCoordinates(List<PolygonCoordinates> polygonCoordinates){
+    public void addCoordinates(List<PolygonCoordinatesWS> polygonCoordinates){
         this.polygonCoordinates = polygonCoordinates;
         createPath();
     }
 
 
-    public void addCoordinate(PolygonCoordinates polygonCoordinates, int position){
+    public void addCoordinate(PolygonCoordinatesWS polygonCoordinates, int position){
         if(this.polygonCoordinates.size() >= 4){
             this.polygonCoordinates = new ArrayList<>();
         }
@@ -46,7 +46,7 @@ public class PolygonCoordinatesSingleton {
         path2D = new Path2D.Double();
 
         for (int i = 0; i < this.polygonCoordinates.size(); i++) {
-            PolygonCoordinates coordinates = this.polygonCoordinates.get(i);
+            PolygonCoordinatesWS coordinates = this.polygonCoordinates.get(i);
             if(i == 0){
                 path2D.moveTo(coordinates.getLat(), coordinates.getLng());
             }else{
@@ -59,7 +59,7 @@ public class PolygonCoordinatesSingleton {
         return path2D.contains(new Point2D.Double(lat, lng));
     }
 
-    public List<PolygonCoordinates> getCoordinates(){
+    public List<PolygonCoordinatesWS> getCoordinates(){
         return this.polygonCoordinates;
     }
 }
