@@ -1,14 +1,15 @@
 package pt.uminho.infrarob.common.objects.ws;
 
 public class PolygonCoordinatesWS {
-    private int position;
     private double lat;
     private double lng;
 
-    public PolygonCoordinatesWS(double lat, double lon, int position) {
+    public PolygonCoordinatesWS(double lat, double lon) {
         this.lat = lat;
         this.lng = lon;
-        this.position = position;
+    }
+
+    public PolygonCoordinatesWS() {
     }
 
     public double getLat() {
@@ -25,14 +26,6 @@ public class PolygonCoordinatesWS {
 
     public void setLng(double lng) {
         this.lng = lng;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
     }
 
     @Override

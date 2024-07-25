@@ -1,12 +1,12 @@
-package pt.uminho.infrarob.events.initialization;
+package pt.uminho.infrarob.initialization;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import pt.uminho.infrarob.common.objects.PolygonDataSource;
-import pt.uminho.infrarob.common.objects.ws.PolygonCoordinatesWS;
+import pt.uminho.infrarob.common.objects.enums.PolygonDataSource;
+import pt.uminho.infrarob.common.objects.internal.PolygonCoordinates;
 import pt.uminho.infrarob.common.singleton.PolygonCoordinatesSingleton;
 
 import java.util.logging.Logger;
@@ -38,9 +38,9 @@ public class PostConstructInit {
         for (int i = 0; i < lat.length; i++) {
             String lats = lat[i];
             String lngs = lng[i];
-            PolygonCoordinatesWS polygonCoordinates = new PolygonCoordinatesWS(Double.parseDouble(lats), Double.parseDouble(lngs), i);
+            PolygonCoordinates polygonCoordinates = new PolygonCoordinates(Double.parseDouble(lats), Double.parseDouble(lngs), i);
             //PolygonCoordinateEvent polygonCoordinateEvent = new PolygonCoordinateEvent(this,polygonCoordinates, PolygonDataSource.CONFIG_FILE);
-            PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates, i);
+            PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates);
         }
     }
 }

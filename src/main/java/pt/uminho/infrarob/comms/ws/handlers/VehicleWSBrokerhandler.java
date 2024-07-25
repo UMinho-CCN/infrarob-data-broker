@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.ws.handlers;
+package pt.uminho.infrarob.comms.ws.handlers;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
