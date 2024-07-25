@@ -14,7 +14,7 @@ stompClient.onConnect = (frame) => {
     getPolygonCoordinates();
 
     stompClient.subscribe('/topic/positioning-data', (vehicle_data) => {
-        console.log(vehicle_data);
+        //console.log(vehicle_data.body);
         showPosiotionData(JSON.parse(vehicle_data.body));
     });
     stompClient.subscribe('/topic/polygon-created', (polygon_coordinates) => {
@@ -22,14 +22,16 @@ stompClient.onConnect = (frame) => {
     });
     stompClient.subscribe('/topic/safe-zone-infraction', (vehicle_data) => {
         let data = JSON.parse(vehicle_data.body);
-        const myLatlng = {lat: parseFloat(data.vehiclePosition.lat), lng: parseFloat(data.vehiclePosition.lon)};
+        let objectdata = data.objectDataWS
+
+        const myLatlng = {lat: parseFloat(objectdata.lat), lng: parseFloat(objectdata.lon)};
 
         infoWindow = new google.maps.InfoWindow({
             position: myLatlng,
         });
 
         infoWindow.setContent(
-            JSON.stringify(data.message + " " + data.vehiclePosition.lat + ", " + data.vehiclePosition.lon, null, 2),
+            JSON.stringify(data.message + " " + objectdata.lat + ", " + objectdata.lon, null, 2),
         );
         infoWindow.open(map);
     });
@@ -78,10 +80,9 @@ function getPolygonCoordinates() {
 }
 
 function showPosiotionData(positions) {
-    //console.log(positions.positionList.length);
     let i = 0;
-    while ( i < positions.positionList.length){
-        var pos = positions.positionList[i];
+    while ( i < positions.length){
+        var pos = positions[i];
         //console.log(pos);
         moveMarker(pos["objectID"], parseFloat(pos["lat"]), parseFloat(pos["lon"]));
         i++;
@@ -109,6 +110,7 @@ function clickLatLon(mapsMouseEvent){
 }
 
 async function showPolygon(squareCoords){
+    //console.log(squareCoords)
     if(squareCoords.length < 1){
         return;
     }

@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.common.objects;
+package pt.uminho.infrarob.common.objects.enums;
 
 public enum PolygonDataSource {
     WEB,

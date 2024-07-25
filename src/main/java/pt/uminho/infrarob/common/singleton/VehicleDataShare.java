@@ -6,8 +6,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class VehicleDataShare {
+
+    ReadWriteLock lock = new ReentrantReadWriteLock();
+    Lock writeLock =  lock.writeLock();
+    Lock readLock = lock.readLock();
     private Map<String, InternalObjectData> vehiclePositionMap;
     private static VehicleDataShare instance = null;
 
@@ -24,24 +31,32 @@ public class VehicleDataShare {
     }
 
     public void addVehiclePosition(InternalObjectData internalObjectData){
-        InternalObjectData veh;
-        if(!vehiclePositionMap.containsKey(internalObjectData.getVehicleID())){
-            veh = new InternalObjectData(internalObjectData.getVehicleID());
-            veh.setVehicleType(internalObjectData.getVehicleType());
-            vehiclePositionMap.put(internalObjectData.getVehicleID(), internalObjectData);
-        }else{
-            veh = vehiclePositionMap.get(internalObjectData.getVehicleID());
+        try {
+            writeLock.lock();
+            InternalObjectData aux = internalObjectData;
+
+            if (!vehiclePositionMap.containsKey(internalObjectData.getVehicleID())) {
+                vehiclePositionMap.put(internalObjectData.getVehicleID(), internalObjectData);
+            } else {
+                internalObjectData = vehiclePositionMap.get(internalObjectData.getVehicleID());
+            }
+
+
+            internalObjectData.setLastUpdate(aux.getLastUpdate());
+            internalObjectData.setLat(aux.getLat());
+            internalObjectData.setLon(aux.getLon());
+        }finally {
+           writeLock.unlock();
         }
-
-
-
-        veh.setLastUpdate(internalObjectData.getLastUpdate());
-        veh.setLat(internalObjectData.getLat());
-        veh.setLon(internalObjectData.getLon());
     }
 
     public InternalObjectData getVehiclePosition(String id){
-        return vehiclePositionMap.get(id);
+        try{
+            readLock.lock();
+            return vehiclePositionMap.get(id);
+        }finally {
+            readLock.unlock();
+        }
     }
 
     public void removePosition(String id){

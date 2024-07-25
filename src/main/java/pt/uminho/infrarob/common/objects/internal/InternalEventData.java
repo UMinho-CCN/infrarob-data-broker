@@ -1,10 +1,11 @@
 package pt.uminho.infrarob.common.objects.internal;
 
+import pt.uminho.infrarob.common.objects.enums.InfractionType;
 import pt.uminho.infrarob.common.objects.proto2.Proto2Event;
 
 public class InternalEventData {
     private int eventID;
-    private String eventType;
+    private InfractionType eventType;
     private String origin;
     private int lat;
     private int lon;
@@ -14,7 +15,7 @@ public class InternalEventData {
     public InternalEventData() {
     }
 
-    public InternalEventData(int eventID, String eventType, String origin, int lat, int lon, int altitude, int radius) {
+    public InternalEventData(int eventID, InfractionType eventType, String origin, int lat, int lon, int altitude, int radius) {
         this.eventID = eventID;
         this.eventType = eventType;
         this.origin = origin;
@@ -32,11 +33,11 @@ public class InternalEventData {
         this.eventID = eventID;
     }
 
-    public String getEventType() {
+    public InfractionType getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(InfractionType eventType) {
         this.eventType = eventType;
     }
 
@@ -83,7 +84,7 @@ public class InternalEventData {
     public Proto2Event toProto2Event(){
         Proto2Event event = new Proto2Event();
         event.setEventID(this.getEventID());
-        event.setEventType(this.getEventType());
+        event.setEventType(this.getEventType().toString());
         event.setOrigin(this.getOrigin());
         event.setLat(this.getLat());
         event.setLon(this.getLon());

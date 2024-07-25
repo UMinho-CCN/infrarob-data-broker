@@ -1,18 +1,16 @@
 package pt.uminho.infrarob.common.objects.ws;
 
-import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class VehicleResponseDataWS {
+public class ObjectsDataWS {
     private List<ObjectDataWS> positionList;
 
-    public VehicleResponseDataWS(List<ObjectDataWS> positionList) {
+    public ObjectsDataWS(List<ObjectDataWS> positionList) {
         this.positionList = positionList;
     }
 
-    public VehicleResponseDataWS() {
+    public ObjectsDataWS() {
         this.positionList = new ArrayList<>();
     }
 
