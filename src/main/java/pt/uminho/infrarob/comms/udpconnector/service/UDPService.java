@@ -49,7 +49,6 @@ public class UDPService {
                 0,
                 0
         );
-
         V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, internalObjectData);
         applicationEventPublisher.publishEvent(event);
     }
