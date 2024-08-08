@@ -3,6 +3,7 @@ package pt.uminho.infrarob.events.listners;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.annotation.Order;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Profile("v2x-in")
 public class V2XInputEventManager {
 
     @Autowired

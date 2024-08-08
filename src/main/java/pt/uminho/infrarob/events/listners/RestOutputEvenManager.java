@@ -3,6 +3,7 @@ package pt.uminho.infrarob.events.listners;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 import pt.uminho.infrarob.common.objects.proto2.Proto2Objects;
+import pt.uminho.infrarob.common.objects.rest.RestRequestData;
 import pt.uminho.infrarob.events.events.V2xMessageOutputEvent;
 
 import java.util.List;
 
 @Component
+@Profile("rest-out")
 public class RestOutputEvenManager {
 
     @Value("${rest.output.uri}")
@@ -41,13 +44,15 @@ public class RestOutputEvenManager {
 
         RestClient restClient = RestClient.create();
         try {
+            System.out.println("REST REQUEST: " + REST_URI);
             ResponseEntity responseEntity = restClient
                     .post()
-                    .uri("REST_URI")
-                    .body(mapper.writeValueAsString(proto2Objects))
-                    .header("Authorization", "Bearer: " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiaW5mcmFyb2JfdXNlcnMiLCJ1c2VyIjoidjJ4X3VzZXIifQ.kV39NUCvYcqAWVueDbNpv1VxeT1dYqitngzSwoLuYdY")
+                    .uri(REST_URI)
+                    .body(mapper.writeValueAsString(new RestRequestData(proto2Objects)))
+                    .header("Authorization", "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiaW5mcmFyb2JfdXNlcnMiLCJ1c2VyIjoidjJ4X3VzZXIifQ.kV39NUCvYcqAWVueDbNpv1VxeT1dYqitngzSwoLuYdY")
                     .contentType(MediaType.APPLICATION_JSON)
                     .retrieve().toBodilessEntity();
+            System.out.println("REST: " + responseEntity.getStatusCode());
         } catch (Exception e) {
             //e.printStackTrace();
         }

@@ -3,6 +3,7 @@ package pt.uminho.infrarob.events.listners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@Profile("ws")
 public class WSOutputEventManager {
 
     private final String POLYGON_TOPIC = "/topic/polygon-created";
