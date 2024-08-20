@@ -9,7 +9,7 @@ import pt.uminho.infrarob.events.events.V2XMessageReceivedEvent;
 
 
 @Service
-public class UDPService {
+public class UDPServiceV2X {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
     private long ID = 0;
