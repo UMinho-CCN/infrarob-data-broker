@@ -43,7 +43,6 @@ public class RESTRequestEventManager {
                 RPAObject rpaObject = data.getData().get(i);
 
                 V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, rpaObject.toInternalData());
-                System.out.println(rpaObject.toInternalData().toString());
                 applicationEventPublisher.publishEvent(event);
             }
 
