@@ -104,7 +104,6 @@ public class V2XInputEventManager {
         InternalObjectData pastPosition = VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID());
 
         boolean pastInside = pastPosition == null ? isInside : pastPosition.isInside();
-        //System.out.println("inside: " + isInside + " past: " + pastInside);
         if (pastInside && !isInside) {
             data = new InternalData();
             data.addEvents(new InternalEventData(
@@ -117,6 +116,7 @@ public class V2XInputEventManager {
                     100
             ));
             data.addObject(message.getVehiclePosition());
+
             applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
         }
 

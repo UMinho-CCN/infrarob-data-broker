@@ -9,12 +9,12 @@ import pt.uminho.infrarob.comms.udpconnector.service.UDPServiceV2X;
 @Configuration
 public class UDPIntegrationV2X {
     @Bean
-    public UDPServiceV2X udpService(){
+    public UDPServiceV2X udpServiceV2X(){
         return new UDPServiceV2X();
     }
 
     @Bean
-    public IntegrationFlow pocessUdpMessage(){
+    public IntegrationFlow pocessUdpMessageV2X(){
         return IntegrationFlow
                 .from(Udp.inboundAdapter(9000))
                 .handle("UDPServiceV2X","receive")

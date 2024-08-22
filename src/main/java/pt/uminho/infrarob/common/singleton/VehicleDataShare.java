@@ -41,7 +41,6 @@ public class VehicleDataShare {
                 internalObjectData = vehiclePositionMap.get(internalObjectData.getVehicleID());
             }
 
-
             internalObjectData.setLastUpdate(aux.getLastUpdate());
             internalObjectData.setLat(aux.getLat());
             internalObjectData.setLon(aux.getLon());
