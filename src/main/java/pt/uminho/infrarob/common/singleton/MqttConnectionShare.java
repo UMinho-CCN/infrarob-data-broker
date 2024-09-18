@@ -23,7 +23,7 @@ public class MqttConnectionShare {
     private IMqttClient mqttClient;
     private MqttConnectOptions options;
 
-    public static MqttConnectionShare getInstance() throws MqttException, IOException {
+    public static MqttConnectionShare getInstance() {
         if(instance == null){
             instance = new MqttConnectionShare();
         }
@@ -31,27 +31,42 @@ public class MqttConnectionShare {
         return instance;
     }
 
-    private MqttConnectionShare() throws MqttException, IOException {
+    private MqttConnectionShare() {
         Properties properties = new Properties();
         InputStream inputStream = MqttConnectionShare.class.getClassLoader().getResourceAsStream("application.properties");
-        properties.load(inputStream);
-        inputStream.close();
+        try {
+            properties.load(inputStream);
+            inputStream.close();
 
-        this.topic = properties.getProperty("forward.broker.topic");
-        this.brokerURL = properties.getProperty("forward.broker.url");
-        this.mqttClient = new MqttClient(brokerURL, UUID.randomUUID().toString());
-        connectMQTT();
+            this.topic = properties.getProperty("forward.broker.topic");
+            this.brokerURL = properties.getProperty("forward.broker.url");
+            this.mqttClient = new MqttClient(brokerURL, UUID.randomUUID().toString());
+            connectMQTT();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
-    private void connectMQTT() throws MqttException {
+    private void connectMQTT() {
         options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
-        mqttClient.connect(options);
+        try {
+            mqttClient.connect(options);
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void publishToClient(MqttMessage mqttMessage) throws MqttException {
-        mqttClient.publish(topic, mqttMessage);
+    public void publishToClient(MqttMessage mqttMessage) {
+        try {
+            mqttClient.publish(topic, mqttMessage);
+        } catch (MqttException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

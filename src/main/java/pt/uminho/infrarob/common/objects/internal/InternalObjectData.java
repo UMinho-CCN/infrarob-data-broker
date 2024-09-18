@@ -243,8 +243,8 @@ public class InternalObjectData {
     public ObjectDataWS toObjectDataWS(){
         ObjectDataWS objectDataWS = new ObjectDataWS();
         objectDataWS.setObjectID(this.getVehicleID());
-        objectDataWS.setLat((double) this.getLat() /1000000);
-        objectDataWS.setLon((double) this.getLon() /1000000);
+        objectDataWS.setLat((double) this.getLat() /10000000);
+        objectDataWS.setLon((double) this.getLon() /10000000);
         objectDataWS.setVelocity(this.getSpeed());
         return objectDataWS;
     }

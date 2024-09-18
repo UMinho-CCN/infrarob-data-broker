@@ -45,7 +45,7 @@ public class MQTTOutputEventManager {
         try {
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(proto2Objects).getBytes(StandardCharsets.UTF_8));
             MqttConnectionShare.getInstance().publishToClient(mqttMessage);
-        } catch (MqttException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -66,7 +66,7 @@ public class MQTTOutputEventManager {
         try {
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(proto2Objects).getBytes(StandardCharsets.UTF_8));
             MqttConnectionShare.getInstance().publishToClient(mqttMessage);
-        } catch (MqttException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

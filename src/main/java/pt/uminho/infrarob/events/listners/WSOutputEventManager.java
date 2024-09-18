@@ -51,6 +51,7 @@ public class WSOutputEventManager {
         for (int i = 0; i < outputEvent.getData().getObjects().size(); i++) {
             InternalObjectData internalObjectData = outputEvent.getData().getObjects().get(i);
             positionList.add(internalObjectData.toObjectDataWS());
+            System.out.println(internalObjectData.toObjectDataWS());
         }
         simpMessagingTemplate.convertAndSend(OBJECT_TOPIC,positionList);
     }
