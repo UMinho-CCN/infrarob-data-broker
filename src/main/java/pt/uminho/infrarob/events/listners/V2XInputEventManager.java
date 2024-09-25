@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,9 @@ import pt.uminho.infrarob.events.events.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 @Profile("v2x-in")
@@ -36,15 +40,6 @@ public class V2XInputEventManager {
     @Value("${polygon.src.station}")
     private String [] polygonSRCs;
 
-    @Value("${storage.cash:true}")
-    private boolean storeInCash;
-
-    @Value("${forward.enable:false}")
-    private boolean sendToBroker;
-
-    @Value("${forward.brokers:WS}")
-    private Brokers broker;
-
     @Value(("${infraction.speed}"))
     private int speedThreshold;
 
@@ -53,22 +48,27 @@ public class V2XInputEventManager {
 
     @Async
     @EventListener
-    @Order(1)
+    @Order(Ordered.HIGHEST_PRECEDENCE)
     public void handleForwarding(V2XMessageReceivedEvent message){
         InternalObjectData internalObjectData = message.getVehiclePosition();
         VehicleDataShare.getInstance().addVehiclePosition(internalObjectData);
 
         InternalData data = new InternalData();
         data.addObject(internalObjectData);
+
+        checkSpeed(message);
+        checkJerk(message);
+        handlePolygon(message);
+        handleSafeZone(message);
+
         applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
     }
 
 
-    @Async
-    @EventListener
-    @Order(10)
+
     public void handlePolygon(V2XMessageReceivedEvent message){
         if(polygonSource == PolygonDataSource.V2X){
+
             List<String> srcs = Arrays.asList(polygonSRCs);
             int stationIndex = srcs.indexOf(message.getVehiclePosition().getVehicleID());
             InternalData data = new InternalData();
@@ -86,15 +86,13 @@ public class V2XInputEventManager {
         }
     }
 
-    @Async
-    @EventListener
-    @Order(10)
     public void handleSafeZone(V2XMessageReceivedEvent message) {
         if(polygonSource == PolygonDataSource.V2X){
             if(Arrays.asList(polygonSRCs).contains(message.getVehiclePosition().getVehicleID())){
                 return;
             }
         }
+
         InternalData data;
 
         boolean isInside = PolygonCoordinatesSingleton.getIntance().isInside(
@@ -119,16 +117,9 @@ public class V2XInputEventManager {
 
             applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
         }
-
         VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID()).setInside(isInside);
     }
 
-
-
-
-    @Async
-    @EventListener
-    @Order(10)
     public void checkSpeed(V2XMessageReceivedEvent message){
         if(message.getVehiclePosition().getSpeed() > speedThreshold){
             InternalData data = new InternalData();
@@ -146,10 +137,8 @@ public class V2XInputEventManager {
         }
     }
 
-    @Async
-    @EventListener
-    @Order(10)
     public void checkJerk(V2XMessageReceivedEvent message){
+
         InternalObjectData pastPosition = VehicleDataShare.getInstance().getVehiclePosition(message.getVehiclePosition().getVehicleID());
 
         if(pastPosition == null) return;

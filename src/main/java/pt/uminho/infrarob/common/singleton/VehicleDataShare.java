@@ -12,9 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class VehicleDataShare {
 
-    ReadWriteLock lock = new ReentrantReadWriteLock();
-    Lock writeLock =  lock.writeLock();
-    Lock readLock = lock.readLock();
+
     private Map<String, InternalObjectData> vehiclePositionMap;
     private static VehicleDataShare instance = null;
 
@@ -31,31 +29,22 @@ public class VehicleDataShare {
     }
 
     public void addVehiclePosition(InternalObjectData internalObjectData){
-        try {
-            writeLock.lock();
-            InternalObjectData aux = internalObjectData;
+        InternalObjectData aux = internalObjectData;
 
-            if (!vehiclePositionMap.containsKey(internalObjectData.getVehicleID())) {
-                vehiclePositionMap.put(internalObjectData.getVehicleID(), internalObjectData);
-            } else {
-                internalObjectData = vehiclePositionMap.get(internalObjectData.getVehicleID());
-            }
-
-            internalObjectData.setLastUpdate(aux.getLastUpdate());
-            internalObjectData.setLat(aux.getLat());
-            internalObjectData.setLon(aux.getLon());
-        }finally {
-           writeLock.unlock();
+        if (!vehiclePositionMap.containsKey(internalObjectData.getVehicleID())) {
+            vehiclePositionMap.put(internalObjectData.getVehicleID(), internalObjectData);
+        } else {
+            internalObjectData = vehiclePositionMap.get(internalObjectData.getVehicleID());
         }
+
+        internalObjectData.setLastUpdate(aux.getLastUpdate());
+        internalObjectData.setLat(aux.getLat());
+        internalObjectData.setLon(aux.getLon());
+
     }
 
     public InternalObjectData getVehiclePosition(String id){
-        try{
-            readLock.lock();
-            return vehiclePositionMap.get(id);
-        }finally {
-            readLock.unlock();
-        }
+        return vehiclePositionMap.get(id);
     }
 
     public void removePosition(String id){
