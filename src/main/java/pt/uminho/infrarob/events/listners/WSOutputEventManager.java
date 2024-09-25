@@ -75,8 +75,10 @@ public class WSOutputEventManager {
         if(outputEvent.getData().getCoordinates() == null){
             return;
         }
+        System.out.println("polygon data");
         List<PolygonCoordinatesWS> coordinatesWS = new ArrayList<>();
         for (int i = 0; i < PolygonCoordinatesSingleton.getIntance().getCoordinates().size(); i++) {
+
             PolygonCoordinates polygonCoordinates = PolygonCoordinatesSingleton.getIntance().getCoordinates().get(i);
             coordinatesWS.add(polygonCoordinates.toPolygonCoordinatesWS());
         }

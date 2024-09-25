@@ -110,7 +110,7 @@ function clickLatLon(mapsMouseEvent){
 }
 
 async function showPolygon(squareCoords){
-    //console.log(squareCoords)
+
     if(squareCoords.length < 1){
         return;
     }

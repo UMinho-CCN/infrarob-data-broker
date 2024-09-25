@@ -85,11 +85,11 @@ public class InternalObjectData {
     }
 
     public double getConvertedLat(){
-        return (double)this.lat/1000000;
+        return (double)this.lat/10000000;
     }
 
     public double getConvertedLon(){
-        return (double)this.lon/1000000;
+        return (double)this.lon/10000000;
     }
 
     public void setLat(int lat) {
