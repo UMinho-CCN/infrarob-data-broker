@@ -31,7 +31,7 @@ public class PolygonWSController {
         }
         InternalData data = new InternalData();
         data.addCoordinates(coordinate);
-        PolygonCoordinatesSingleton.getIntance().addCoordinate(coordinate);
+        PolygonCoordinatesSingleton.getIntance().addCoordinate(coordinate, false);
 
         InternalData aux = new InternalData(null, null, PolygonCoordinatesSingleton.getIntance().getCoordinates());
 
