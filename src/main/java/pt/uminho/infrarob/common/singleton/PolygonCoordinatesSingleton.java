@@ -40,13 +40,28 @@ public class PolygonCoordinatesSingleton {
     }
 
 
-    public void addCoordinate(PolygonCoordinates polygonCoordinates){
+    public void addCoordinate(PolygonCoordinates polygonCoordinates, boolean v2x){
         try {
             writeLock.lock();
+            boolean add = true;
             if (this.polygonCoordinates.size() >= 4) {
-                this.polygonCoordinates = new ArrayList<>();
+                if(v2x){
+                    for (int i = 0; i < this.polygonCoordinates.size(); i++) {
+                        PolygonCoordinates coordinates = this.polygonCoordinates.get(i);
+                        if(coordinates.getPosition() == polygonCoordinates.getPosition()){
+                            coordinates.setLat(polygonCoordinates.getLat());
+                            coordinates.setLng(polygonCoordinates.getLng());
+                            add = false;
+                        }
+                    }
+                }
+                else {
+                    this.polygonCoordinates = new ArrayList<>();
+                }
             }
-            this.polygonCoordinates.add(polygonCoordinates);
+            if(add) {
+                this.polygonCoordinates.add(polygonCoordinates);
+            }
             Collections.sort(this.polygonCoordinates, Comparator.comparingInt(PolygonCoordinates::getPosition));
             if (this.polygonCoordinates.size() > 2) {
                 createPath();

@@ -80,7 +80,7 @@ public class V2XInputEventManager {
                         message.getVehiclePosition().getConvertedLon(),
                         stationIndex);
                 data.addCoordinates(polygonCoordinates);
-                PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates);
+                PolygonCoordinatesSingleton.getIntance().addCoordinate(polygonCoordinates, true);
                 applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
             }
         }
