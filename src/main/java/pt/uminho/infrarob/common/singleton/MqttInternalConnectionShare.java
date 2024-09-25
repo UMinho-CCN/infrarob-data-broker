@@ -1,9 +1,7 @@
 package pt.uminho.infrarob.common.singleton;
 
 import org.eclipse.paho.client.mqttv3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -12,28 +10,28 @@ import java.util.Properties;
 import java.util.UUID;
 
 @Component
-public class MqttConnectionShare {
+public class MqttInternalConnectionShare {
 
     @Value("${forward.broker.topic:infrarob-data}")
     private String topic;
 
     @Value("${forward.broker.url}")
     private String brokerURL;
-    private static MqttConnectionShare instance = null;
+    private static MqttInternalConnectionShare instance = null;
     private IMqttClient mqttClient;
     private MqttConnectOptions options;
 
-    public static MqttConnectionShare getInstance() {
+    public static MqttInternalConnectionShare getInstance() {
         if(instance == null){
-            instance = new MqttConnectionShare();
+            instance = new MqttInternalConnectionShare();
         }
 
         return instance;
     }
 
-    private MqttConnectionShare() {
+    private MqttInternalConnectionShare() {
         Properties properties = new Properties();
-        InputStream inputStream = MqttConnectionShare.class.getClassLoader().getResourceAsStream("application.properties");
+        InputStream inputStream = MqttInternalConnectionShare.class.getClassLoader().getResourceAsStream("application.properties");
         try {
             properties.load(inputStream);
             inputStream.close();

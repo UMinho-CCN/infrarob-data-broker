@@ -2,12 +2,15 @@ package pt.uminho.infrarob.events.listners;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import pt.uminho.infrarob.common.objects.internal.InternalEventData;
 import pt.uminho.infrarob.common.objects.standard.*;
+import pt.uminho.infrarob.common.singleton.MqttExternalConnectionShare;
+import pt.uminho.infrarob.common.singleton.MqttInternalConnectionShare;
 import pt.uminho.infrarob.events.events.V2xMessageOutputEvent;
 
 import java.nio.charset.StandardCharsets;
@@ -30,7 +33,7 @@ public class DenmOutputEventManager {
         Altitude altitude = new Altitude("negativeOutOfRange", "alt-000-01");
         EventPosition eventPosition = new EventPosition(eventData.getLat(), eventData.getLon(), positionConfidenceEllipse, altitude);
 
-        DenmManagement denmManagement = new DenmManagement(actionId, 0, 0, eventPosition, 600, "unkown");
+        DenmManagement denmManagement = new DenmManagement(actionId, outputEvent.getTimestamp(), 0, eventPosition, 600, "unkown");
 
         EventType eventType = new EventType("collisionRisk97 : collisionRiskWithRoadWorks");
 
@@ -69,7 +72,8 @@ public class DenmOutputEventManager {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
-            System.out.println(mapper.writeValueAsString(standardDENM));
+            MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(standardDENM).getBytes(StandardCharsets.UTF_8));
+            MqttExternalConnectionShare.getInstance().publishToClient(mqttMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

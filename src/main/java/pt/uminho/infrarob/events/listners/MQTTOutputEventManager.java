@@ -1,23 +1,19 @@
 package pt.uminho.infrarob.events.listners;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
-import pt.uminho.infrarob.common.objects.proto2.Proto2ObjectData;
 import pt.uminho.infrarob.common.objects.proto2.Proto2Objects;
-import pt.uminho.infrarob.common.singleton.MqttConnectionShare;
+import pt.uminho.infrarob.common.singleton.MqttInternalConnectionShare;
 import pt.uminho.infrarob.events.events.V2xMessageOutputEvent;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -44,7 +40,7 @@ public class MQTTOutputEventManager {
         ObjectMapper mapper = new ObjectMapper();
         try {
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(proto2Objects).getBytes(StandardCharsets.UTF_8));
-            MqttConnectionShare.getInstance().publishToClient(mqttMessage);
+            MqttInternalConnectionShare.getInstance().publishToClient(mqttMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +61,7 @@ public class MQTTOutputEventManager {
         ObjectMapper mapper = new ObjectMapper();
         try {
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(proto2Objects).getBytes(StandardCharsets.UTF_8));
-            MqttConnectionShare.getInstance().publishToClient(mqttMessage);
+            MqttInternalConnectionShare.getInstance().publishToClient(mqttMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
