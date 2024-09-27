@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.common.objects.standard;
+package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class Altitude {
     private String altitudeValue;
@@ -30,7 +30,7 @@ public class Altitude {
 
     @Override
     public String toString() {
-        return "Altitude{" +
+        return "CAMAltitude{" +
                 "altitudeValue='" + altitudeValue + '\'' +
                 ", altitudeConfidence='" + altitudeConfidence + '\'' +
                 '}';

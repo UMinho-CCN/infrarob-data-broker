@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.common.objects.standard;
+package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class PerceivedPreCrashObject {
     private long measurementDeltaTime;

@@ -1,13 +1,13 @@
-package pt.uminho.infrarob.common.objects.standard;
+package pt.uminho.infrarob.common.objects.standard.cam;
 
-public class ValueConfidence {
+public class CAMLongitudinalAcceleration {
     private int value;
-    private String confidence;
+    private int confidence;
 
-    public ValueConfidence() {
+    public CAMLongitudinalAcceleration() {
     }
 
-    public ValueConfidence(int value, String confidence) {
+    public CAMLongitudinalAcceleration(int value, int confidence) {
         this.value = value;
         this.confidence = confidence;
     }
@@ -20,19 +20,19 @@ public class ValueConfidence {
         this.value = value;
     }
 
-    public String getConfidence() {
+    public int getConfidence() {
         return confidence;
     }
 
-    public void setConfidence(String confidence) {
+    public void setConfidence(int confidence) {
         this.confidence = confidence;
     }
 
     @Override
     public String toString() {
-        return "ValueConfidence{" +
+        return "CAMLongitudinalAcceleration{" +
                 "value=" + value +
-                ", confidence='" + confidence + '\'' +
+                ", confidence=" + confidence +
                 '}';
     }
 }

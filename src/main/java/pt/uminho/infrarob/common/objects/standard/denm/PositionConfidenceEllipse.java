@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.common.objects.standard;
+package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class PositionConfidenceEllipse {
     private String semiMajorConfidence;
@@ -40,7 +40,7 @@ public class PositionConfidenceEllipse {
 
     @Override
     public String toString() {
-        return "PositionConfidenceEllipse{" +
+        return "CAMPositionConfidenceEllipse{" +
                 "semiMajorConfidence='" + semiMajorConfidence + '\'' +
                 ", semiMinorConfidence='" + semiMinorConfidence + '\'' +
                 ", semiMajorOrientation='" + semiMajorOrientation + '\'' +
