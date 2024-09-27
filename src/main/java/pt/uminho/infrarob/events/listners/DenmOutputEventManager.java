@@ -8,9 +8,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import pt.uminho.infrarob.common.objects.internal.InternalEventData;
-import pt.uminho.infrarob.common.objects.standard.*;
+import pt.uminho.infrarob.common.objects.standard.denm.*;
 import pt.uminho.infrarob.common.singleton.MqttExternalConnectionShare;
-import pt.uminho.infrarob.common.singleton.MqttInternalConnectionShare;
 import pt.uminho.infrarob.events.events.V2xMessageOutputEvent;
 
 import java.nio.charset.StandardCharsets;

@@ -1,4 +1,4 @@
-package pt.uminho.infrarob.common.objects.standard;
+package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class Alacarte {
     private String collisionObject;
