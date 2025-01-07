@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CAMHeader {
 
-    @JsonProperty("ProtocolVersion")
+    @JsonProperty("protocolVersion")
     private long protocolVersion;
-    @JsonProperty("MessageId")
+    @JsonProperty("messageId")
     private long messageId;
-    @JsonProperty("StationId")
+    @JsonProperty("stationId")
     private long stationId;
 
     public CAMHeader() {

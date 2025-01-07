@@ -16,7 +16,7 @@ public class UDPIntegrationAlerts {
     @Bean
     public IntegrationFlow pocessUdpMessageAlert(){
         return IntegrationFlow
-                .from(Udp.inboundAdapter(9001))
+                .from(Udp.inboundAdapter(9999))
                 .handle("UDPServiceAlerts","receive")
                 .get();
     }

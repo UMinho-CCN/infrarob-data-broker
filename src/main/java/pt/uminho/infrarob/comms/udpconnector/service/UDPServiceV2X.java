@@ -57,6 +57,7 @@ public class UDPServiceV2X {
 
         ObjectMapper mapper = new ObjectMapper();
         try {
+            //System.out.println("Data: " + (data));
             Proto1CAM proto1CAM = mapper.readValue(data, Proto1CAM.class);
             System.out.println(proto1CAM);
             InternalObjectData internalObjectData = proto1CAM.toInternalObjectData();

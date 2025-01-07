@@ -47,7 +47,7 @@ public class MessageBrokerIntegration {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+		System.out.println("CONNECTING to MQTT");
 
 		String topic = properties.getProperty("subscribe.broker.topic");
 		String url = properties.getProperty("subscribe.broker.url");
@@ -64,11 +64,12 @@ public class MessageBrokerIntegration {
         try {
             CAMBody cam = mapper.readValue(data, CAMBody.class);
 			InternalObjectData internalObjectData = cam.toInternalObjectData();
+			System.out.println("recv CAM: " + cam.toString());
 			internalObjectData.setLastUpdate(System.currentTimeMillis());
 			V2XMessageReceivedEvent event = new V2XMessageReceivedEvent(this, internalObjectData);
 			applicationEventPublisher.publishEvent(event);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

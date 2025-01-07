@@ -3,7 +3,7 @@ package pt.uminho.infrarob.common.objects.standard.cam;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HighFrequencyContainer {
-    @JsonProperty("Selected")
+    @JsonProperty("selected")
     private int selected;
     private BasicVehicleContainerHighFrequency basicVehicleContainerHighFrequency;
 

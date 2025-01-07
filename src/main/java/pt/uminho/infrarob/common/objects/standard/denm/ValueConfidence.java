@@ -2,12 +2,12 @@ package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class ValueConfidence {
     private int value;
-    private String confidence;
+    private int confidence;
 
     public ValueConfidence() {
     }
 
-    public ValueConfidence(int value, String confidence) {
+    public ValueConfidence(int value, int confidence) {
         this.value = value;
         this.confidence = confidence;
     }
@@ -20,11 +20,11 @@ public class ValueConfidence {
         this.value = value;
     }
 
-    public String getConfidence() {
+    public int getConfidence() {
         return confidence;
     }
 
-    public void setConfidence(String confidence) {
+    public void setConfidence(int confidence) {
         this.confidence = confidence;
     }
 

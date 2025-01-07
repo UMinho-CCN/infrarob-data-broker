@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
+import pt.uminho.infrarob.common.objects.enums.InfractionType;
 import pt.uminho.infrarob.common.objects.internal.InternalEventData;
 import pt.uminho.infrarob.common.objects.standard.denm.*;
 import pt.uminho.infrarob.common.singleton.MqttExternalConnectionShare;
@@ -25,56 +26,69 @@ public class DenmOutputEventManager {
             return;
         }
         InternalEventData eventData = outputEvent.getData().getEvents().get(0);
-        DENMHeader denmHeader = new DENMHeader(2,"denm", 0);
+        DENMHeader denmHeader = new DENMHeader(2,1, 0);
 
         ActionId actionId = new ActionId(0,0);
-        PositionConfidenceEllipse positionConfidenceEllipse = new PositionConfidenceEllipse("doNotUse", "doNotUse", "wgsNorth");
-        Altitude altitude = new Altitude("negativeOutOfRange", "alt-000-01");
+        PositionConfidenceEllipse positionConfidenceEllipse = new PositionConfidenceEllipse(0, 0, 0);
+        Altitude altitude = new Altitude(0, "alt-000-01");
         EventPosition eventPosition = new EventPosition(eventData.getLat(), eventData.getLon(), positionConfidenceEllipse, altitude);
 
-        DenmManagement denmManagement = new DenmManagement(actionId, outputEvent.getTimestamp(), 0, eventPosition, 600, "unkown");
+        DenmManagement denmManagement = new DenmManagement(actionId, outputEvent.getTimestamp(), 0, eventPosition, 10, 0);
+        EventType eventType = new EventType(new DenmCCAndSCC(8));;
+        if(outputEvent.getData().getEvents().get(0).getEventType() == InfractionType.SAFEZONE_INFRACION) {
+            //worker
+            //eventType = new EventType(new DenmCCAndSCC(4));
+            //deviating machine
+            eventType = new EventType(new DenmCCAndSCC(9));
+        }else if(outputEvent.getData().getEvents().get(0).getEventType() == InfractionType.SPEED_INFRACTION){
+            //speeding
+            eventType = new EventType(new DenmCCAndSCC(8));
+        }
 
-        EventType eventType = new EventType("collisionRisk97 : collisionRiskWithRoadWorks");
+        ArrayList<PredictedPath> predictedPaths = new ArrayList<>();
 
-        Situation situation = new Situation(0, eventType);
-
-        PathPosition pathPosition = new PathPosition("unavailable", "unavailable", "negativeOutOfRange");
-
-        DetectionZonesToEventPosition detectionZonesToEventPosition = new DetectionZonesToEventPosition(pathPosition);
-        Location location = new Location(detectionZonesToEventPosition);
-
-        ValueConfidence xCoordinate = new ValueConfidence(836, "outOfRange");
-        ValueConfidence yCoordinate = new ValueConfidence(-3684, "outOfRange");
-        ValueConfidence xVelocity = new ValueConfidence(383, "outOfRange");
-        ValueConfidence yVelocity = new ValueConfidence(222, "outOfRange");
+        ValueConfidence xCoordinate = new ValueConfidence(836, 4095);
+        ValueConfidence yCoordinate = new ValueConfidence(-3684, 4095);
+        ValueConfidence xVelocity = new ValueConfidence(383, 1026);
+        ValueConfidence yVelocity = new ValueConfidence(222, 1026);
 
         Position position = new Position(xCoordinate, yCoordinate);
         CartesianVelocity velocity = new CartesianVelocity(xVelocity, yVelocity);
 
         PerceivedPreCrashObject perceivedPreCrashObject = new PerceivedPreCrashObject(-2048, position, velocity);
 
-        ArrayList<PredictedPath> predictedPaths = new ArrayList<>();
-        predictedPaths.add(new PredictedPath(100, 0, "unavailable", "unavailable"));
-        predictedPaths.add(new PredictedPath(100, 0, "unavailable", "unavailable"));
-        predictedPaths.add(new PredictedPath(100, 0, "unavailable", "unavailable"));
-        predictedPaths.add(new PredictedPath(100, 0, "unavailable", "unavailable"));
+        PredictedPaths predictedPathsObject = new PredictedPaths(predictedPaths, "noIndication", "unavailable");
 
-        PredictedPaths predictedPathsObject = new PredictedPaths(predictedPaths, "noIndication", "unavailavle");
+        PreCrash preCrash = new PreCrash(perceivedPreCrashObject, 4000);
 
-        PreCrash preCrash = new PreCrash(perceivedPreCrashObject, 4000, predictedPathsObject);
+        Alacarte alacarte = new Alacarte(new DenmCollisionObject(5), preCrash);
 
-        Alacarte alacarte = new Alacarte("vehicleSubClass : passengerCar", preCrash);
+        Situation situation = new Situation(0, eventType);
 
-        DenmBody denmBody = new DenmBody(denmManagement, situation, location, alacarte);
+        PathPosition pathPosition = new PathPosition(100, 100, 0);
+
+        DetectionZonesToEventPosition detectionZonesToEventPosition = new DetectionZonesToEventPosition(pathPosition);
+        ArrayList<ArrayList<DetectionZonesToEventPosition>> zones = new ArrayList<>();
+        ArrayList<DetectionZonesToEventPosition> zone = new ArrayList<>();
+        zone.add(detectionZonesToEventPosition);
+        zones.add(new ArrayList<>(zone));
+        Location location = new Location(zones);
+
+
+
+
+        DenmBody denmBody = new DenmBody(denmManagement, situation, location);
 
         StandardDENM standardDENM = new StandardDENM(denmHeader, denmBody);
 
         ObjectMapper mapper = new ObjectMapper();
         try {
+            System.out.println("DEMN: " + mapper.writeValueAsString(standardDENM));
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(standardDENM).getBytes(StandardCharsets.UTF_8));
             MqttExternalConnectionShare.getInstance().publishToClient(mqttMessage);
+
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }

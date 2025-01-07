@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CAMParameters {
-    @JsonProperty("BasicContainer")
+    @JsonProperty("basicContainer")
     private CAMBasicContainer basicContainer;
 
-    @JsonProperty("HighFrequencyContainer")
+    @JsonProperty("highFrequencyContainer")
     private HighFrequencyContainer highFrequencyContainer;
 
     public CAMParameters() {

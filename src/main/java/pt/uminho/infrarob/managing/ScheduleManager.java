@@ -21,12 +21,14 @@ public class ScheduleManager {
             lastUpdate = System.currentTimeMillis();
         }
 
-        ArrayList<InternalObjectData> positionList = new ArrayList<>(VehicleDataShare.getInstance().getList());
-        long time = System.currentTimeMillis();
-        for (int i = 0; i < positionList.size(); i++) {
-            InternalObjectData internalObjectData = positionList.get(i);
-            if(time - internalObjectData.getLastUpdate() >= 30000){
-                VehicleDataShare.getInstance().removePosition(internalObjectData.getVehicleID());
+        ArrayList<InternalObjectData> positionList = (ArrayList<InternalObjectData>) VehicleDataShare.getInstance().getList();
+        if(positionList != null) {
+            long time = System.currentTimeMillis();
+            for (int i = 0; i < positionList.size(); i++) {
+                InternalObjectData internalObjectData = positionList.get(i);
+                if (time - internalObjectData.getLastUpdate() >= 30000) {
+                    VehicleDataShare.getInstance().removePosition(internalObjectData.getVehicleID());
+                }
             }
         }
 
@@ -35,6 +37,7 @@ public class ScheduleManager {
             RequestRESTDataEvent requestRESTDataEvent = new RequestRESTDataEvent(this);
             applicationEventPublisher.publishEvent(requestRESTDataEvent);
         }
+
 
     }
 }

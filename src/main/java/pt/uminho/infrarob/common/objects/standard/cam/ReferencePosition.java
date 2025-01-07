@@ -3,13 +3,13 @@ package pt.uminho.infrarob.common.objects.standard.cam;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ReferencePosition {
-    @JsonProperty("Latitude")
+    @JsonProperty("latitude")
     private int latitude;
-    @JsonProperty("Longitude")
+    @JsonProperty("longitude")
     private int longitude;
-    @JsonProperty("PositionConfidenceEllipse")
+    @JsonProperty("positionConfidenceEllipse")
     private CAMPositionConfidenceEllipse positionConfidenceEllipse;
-    @JsonProperty("Altitude")
+    @JsonProperty("altitude")
     private CAMAltitude altitude;
 
     public ReferencePosition(int latitude, int longitude, CAMPositionConfidenceEllipse positionConfidenceEllipse, CAMAltitude altitude) {

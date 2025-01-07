@@ -5,15 +5,15 @@ import java.util.List;
 public class PreCrash {
     private PerceivedPreCrashObject perceivedPreCrashObject;
     private int timeToCollision;
-    private PredictedPaths predictedPaths;
+
 
     public PreCrash() {
     }
 
-    public PreCrash(PerceivedPreCrashObject perceivedPreCrashObject, int timeToCollision, PredictedPaths predictedPaths) {
+    public PreCrash(PerceivedPreCrashObject perceivedPreCrashObject, int timeToCollision) {
         this.perceivedPreCrashObject = perceivedPreCrashObject;
         this.timeToCollision = timeToCollision;
-        this.predictedPaths = predictedPaths;
+
     }
 
     public PerceivedPreCrashObject getPerceivedPreCrashObject() {
@@ -32,20 +32,13 @@ public class PreCrash {
         this.timeToCollision = timeToCollision;
     }
 
-    public PredictedPaths getPredictedPaths() {
-        return predictedPaths;
-    }
 
-    public void setPredictedPaths(PredictedPaths predictedPaths) {
-        this.predictedPaths = predictedPaths;
-    }
 
     @Override
     public String toString() {
         return "PreCrash{" +
                 "perceivedPreCrashObject=" + perceivedPreCrashObject +
                 ", timeToCollision=" + timeToCollision +
-                ", predictedPaths=" + predictedPaths +
                 '}';
     }
 }

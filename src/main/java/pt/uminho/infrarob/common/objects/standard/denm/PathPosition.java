@@ -1,40 +1,40 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class PathPosition {
-    private String deltaLatitude;
-    private String deltaLongitude;
-    private String deltaAltitude;
+    private int deltaLatitude;
+    private int deltaLongitude;
+    private int deltaAltitude;
 
     public PathPosition() {
     }
 
-    public PathPosition(String deltaLatitude, String deltaLongitude, String deltaAltitude) {
+    public PathPosition(int deltaLatitude, int deltaLongitude, int deltaAltitude) {
         this.deltaLatitude = deltaLatitude;
         this.deltaLongitude = deltaLongitude;
         this.deltaAltitude = deltaAltitude;
     }
 
-    public String getDeltaLatitude() {
+    public int getDeltaLatitude() {
         return deltaLatitude;
     }
 
-    public void setDeltaLatitude(String deltaLatitude) {
+    public void setDeltaLatitude(int deltaLatitude) {
         this.deltaLatitude = deltaLatitude;
     }
 
-    public String getDeltaLongitude() {
+    public int getDeltaLongitude() {
         return deltaLongitude;
     }
 
-    public void setDeltaLongitude(String deltaLongitude) {
+    public void setDeltaLongitude(int deltaLongitude) {
         this.deltaLongitude = deltaLongitude;
     }
 
-    public String getDeltaAltitude() {
+    public int getDeltaAltitude() {
         return deltaAltitude;
     }
 
-    public void setDeltaAltitude(String deltaAltitude) {
+    public void setDeltaAltitude(int deltaAltitude) {
         this.deltaAltitude = deltaAltitude;
     }
 

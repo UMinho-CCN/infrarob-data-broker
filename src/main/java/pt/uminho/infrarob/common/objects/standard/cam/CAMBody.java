@@ -7,9 +7,9 @@ import pt.uminho.infrarob.common.objects.internal.InternalObjectData;
 
 
 public class CAMBody {
-    @JsonProperty("Header")
+    @JsonProperty("header")
     private CAMHeader header;
-    @JsonProperty("CamField")
+    @JsonProperty("cam")
     private CamField camField;
 
     public CAMBody() {
@@ -39,7 +39,7 @@ public class CAMBody {
     public InternalObjectData toInternalObjectData(){
         InternalObjectData internalObjectData = new InternalObjectData();
         internalObjectData.setVehicleID(this.getHeader().getStationId()+"");
-        internalObjectData.setSpeed(this.getCamField().getCamParameters().getHighFrequencyContainer().getBasicVehicleContainerHighFrequency().getSpeed().getSpeedValue());
+        internalObjectData.setSpeed(this.getCamField().getCamParameters().getHighFrequencyContainer().getBasicVehicleContainerHighFrequency().getSpeed().getSpeedValue()/100);
         internalObjectData.setSpeedConfidence(this.getCamField().getCamParameters().getHighFrequencyContainer().getBasicVehicleContainerHighFrequency().getSpeed().getSpeedConfidence());
         internalObjectData.setAccConvidence(this.getCamField().getCamParameters().getHighFrequencyContainer().getBasicVehicleContainerHighFrequency().getLongitudinalAcceleration().getConfidence());
         internalObjectData.setAcc(this.getCamField().getCamParameters().getHighFrequencyContainer().getBasicVehicleContainerHighFrequency().getLongitudinalAcceleration().getValue());

@@ -40,10 +40,8 @@ public class MqttExternalConnectionShare {
             this.brokerURL = properties.getProperty("forward.broker.external.url");
             this.mqttClient = new MqttClient(brokerURL, UUID.randomUUID().toString());
             connectMQTT();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (MqttException e) {
-            throw new RuntimeException(e);
+        } catch (MqttException | IOException e) {
+            e.printStackTrace();
         }
 
     }
@@ -56,7 +54,7 @@ public class MqttExternalConnectionShare {
         try {
             mqttClient.connect(options);
         } catch (MqttException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +62,7 @@ public class MqttExternalConnectionShare {
         try {
             mqttClient.publish(topic, mqttMessage);
         } catch (MqttException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

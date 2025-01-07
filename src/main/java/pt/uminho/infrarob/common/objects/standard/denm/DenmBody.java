@@ -4,16 +4,14 @@ public class DenmBody {
     private DenmManagement management;
     private Situation situation;
     private Location location;
-    private Alacarte alacarte;
 
     public DenmBody() {
     }
 
-    public DenmBody(DenmManagement management, Situation situation, Location location, Alacarte alacarte) {
+    public DenmBody(DenmManagement management, Situation situation, Location location) {
         this.management = management;
         this.situation = situation;
         this.location = location;
-        this.alacarte = alacarte;
     }
 
     public DenmManagement getManagement() {
@@ -40,13 +38,6 @@ public class DenmBody {
         this.location = location;
     }
 
-    public Alacarte getAlacarte() {
-        return alacarte;
-    }
-
-    public void setAlacarte(Alacarte alacarte) {
-        this.alacarte = alacarte;
-    }
 
     @Override
     public String toString() {
@@ -54,7 +45,6 @@ public class DenmBody {
                 "management=" + management +
                 ", situation=" + situation +
                 ", location=" + location +
-                ", alacarte=" + alacarte +
                 '}';
     }
 }

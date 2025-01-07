@@ -1,22 +1,22 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class Altitude {
-    private String altitudeValue;
+    private int altitudeValue;
     private String altitudeConfidence;
 
     public Altitude() {
     }
 
-    public Altitude(String altitudeValue, String altitudeConfidence) {
+    public Altitude(int altitudeValue, String altitudeConfidence) {
         this.altitudeValue = altitudeValue;
         this.altitudeConfidence = altitudeConfidence;
     }
 
-    public String getAltitudeValue() {
+    public int getAltitudeValue() {
         return altitudeValue;
     }
 
-    public void setAltitudeValue(String altitudeValue) {
+    public void setAltitudeValue(int altitudeValue) {
         this.altitudeValue = altitudeValue;
     }
 

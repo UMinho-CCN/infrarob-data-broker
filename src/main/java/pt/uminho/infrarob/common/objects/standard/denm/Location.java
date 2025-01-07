@@ -1,27 +1,23 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Location {
-    private DetectionZonesToEventPosition detectionZonesToEventPosition;
+    private ArrayList<ArrayList<DetectionZonesToEventPosition>> detectionZonesToEventPosition;
 
     public Location() {
     }
 
-    public Location(DetectionZonesToEventPosition detectionZonesToEventPosition) {
+    public Location(ArrayList<ArrayList<DetectionZonesToEventPosition>> detectionZonesToEventPosition) {
         this.detectionZonesToEventPosition = detectionZonesToEventPosition;
     }
 
-    public DetectionZonesToEventPosition getDetectionZonesToEventPosition() {
+    public ArrayList<ArrayList<DetectionZonesToEventPosition>> getDetectionZonesToEventPosition() {
         return detectionZonesToEventPosition;
     }
 
-    public void setDetectionZonesToEventPosition(DetectionZonesToEventPosition detectionZonesToEventPosition) {
+    public void setDetectionZonesToEventPosition(ArrayList<ArrayList<DetectionZonesToEventPosition>> detectionZonesToEventPosition) {
         this.detectionZonesToEventPosition = detectionZonesToEventPosition;
-    }
-
-    @Override
-    public String toString() {
-        return "Location{" +
-                "detectionZonesToEventPosition=" + detectionZonesToEventPosition +
-                '}';
     }
 }

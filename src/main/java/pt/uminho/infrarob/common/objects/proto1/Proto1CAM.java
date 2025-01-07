@@ -197,10 +197,10 @@ public class Proto1CAM {
     public InternalObjectData toInternalObjectData(){
         InternalObjectData internalObjectData = new InternalObjectData();
         internalObjectData.setVehicleID(this.getObjectID());
-        internalObjectData.setSpeed(this.getSpeed());
+        internalObjectData.setSpeed(this.getSpeed()/100);
         internalObjectData.setSpeedConfidence(this.getSpeedConfidence());
         internalObjectData.setAccConvidence(this.getLongAccConfidence());
-        internalObjectData.setAcc(this.getLongAcc());
+        internalObjectData.setAcc(this.getLongAcc()/100);
         internalObjectData.setHeading(this.getHeading());
         internalObjectData.setHeadingConfidence(this.getHeadingConfidence());
         internalObjectData.setLat(this.getLat());
@@ -215,6 +215,7 @@ public class Proto1CAM {
         internalObjectData.setAltitudeConfidene(this.getAltitudeConfidence());
         internalObjectData.setLength(this.getVehicleLength());
         internalObjectData.setLengthConfidence(this.getVehicleLengthConfidence());
+        internalObjectData.setVehicleType("PROTO1");
         return internalObjectData;
     }
 }
