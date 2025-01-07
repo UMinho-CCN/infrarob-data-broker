@@ -3,11 +3,11 @@ package pt.uminho.infrarob.common.objects.standard.cam;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CAMPositionConfidenceEllipse {
-    @JsonProperty("SemiMajorAxisLength")
+    @JsonProperty("semiMajorAxisLength")
     private int semiMajorAxisLength;
-    @JsonProperty("SemiMinorAxisLength")
+    @JsonProperty("semiMinorAxisLength")
     private int semiMinorAxisLength;
-    @JsonProperty("SemiMajorAxisOrientation")
+    @JsonProperty("semiMajorAxisOrientation")
     private int semirMajorAxisOrientation;
 
     public CAMPositionConfidenceEllipse() {

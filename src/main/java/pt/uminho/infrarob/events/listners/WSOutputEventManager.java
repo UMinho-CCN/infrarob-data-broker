@@ -51,7 +51,6 @@ public class WSOutputEventManager {
         for (int i = 0; i < outputEvent.getData().getObjects().size(); i++) {
             InternalObjectData internalObjectData = outputEvent.getData().getObjects().get(i);
             positionList.add(internalObjectData.toObjectDataWS());
-            System.out.println(internalObjectData.toObjectDataWS());
         }
         simpMessagingTemplate.convertAndSend(OBJECT_TOPIC,positionList);
     }
@@ -75,7 +74,6 @@ public class WSOutputEventManager {
         if(outputEvent.getData().getCoordinates() == null){
             return;
         }
-        System.out.println("polygon data");
         List<PolygonCoordinatesWS> coordinatesWS = new ArrayList<>();
         for (int i = 0; i < PolygonCoordinatesSingleton.getIntance().getCoordinates().size(); i++) {
 

@@ -3,9 +3,9 @@ package pt.uminho.infrarob.common.objects.standard.cam;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CAMBasicContainer {
-    @JsonProperty("StationType")
+    @JsonProperty("stationType")
     private long stationType;
-    @JsonProperty("ReferencePosition")
+    @JsonProperty("referencePosition")
     private ReferencePosition referencePosition;
 
     public CAMBasicContainer() {

@@ -6,12 +6,12 @@ public class DenmManagement {
     private long referenceTime;
     private EventPosition eventPosition;
     private long validityDuration;
-    private String stationType;
+    private int stationType;
 
     public DenmManagement() {
     }
 
-    public DenmManagement(ActionId actionId, long detectionTime, long referenceTime, EventPosition eventPosition, long validityDuration, String stationType) {
+    public DenmManagement(ActionId actionId, long detectionTime, long referenceTime, EventPosition eventPosition, long validityDuration, int stationType) {
         this.actionId = actionId;
         this.detectionTime = detectionTime;
         this.referenceTime = referenceTime;
@@ -60,11 +60,11 @@ public class DenmManagement {
         this.validityDuration = validityDuration;
     }
 
-    public String getStationType() {
+    public int getStationType() {
         return stationType;
     }
 
-    public void setStationType(String stationType) {
+    public void setStationType(int stationType) {
         this.stationType = stationType;
     }
 

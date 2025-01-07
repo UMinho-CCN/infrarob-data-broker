@@ -1,22 +1,22 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class Alacarte {
-    private String collisionObject;
+    private DenmCollisionObject collisionObject;
     private PreCrash preCrash;
 
     public Alacarte() {
     }
 
-    public Alacarte(String collisionObject, PreCrash preCrash) {
+    public Alacarte(DenmCollisionObject collisionObject, PreCrash preCrash) {
         this.collisionObject = collisionObject;
         this.preCrash = preCrash;
     }
 
-    public String getCollisionObject() {
+    public DenmCollisionObject getCollisionObject() {
         return collisionObject;
     }
 
-    public void setCollisionObject(String collisionObject) {
+    public void setCollisionObject(DenmCollisionObject collisionObject) {
         this.collisionObject = collisionObject;
     }
 

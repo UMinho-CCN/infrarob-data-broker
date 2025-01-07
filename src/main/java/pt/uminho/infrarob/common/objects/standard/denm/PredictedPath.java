@@ -3,13 +3,13 @@ package pt.uminho.infrarob.common.objects.standard.denm;
 public class PredictedPath {
     private int deltaLatitude;
     private int deltaLongitude;
-    private String deltaAltitude;
-    private String altitudeConfidence;
+    private int deltaAltitude;
+    private int altitudeConfidence;
 
     public PredictedPath() {
     }
 
-    public PredictedPath(int deltaLatitude, int deltaLongitude, String deltaAltitude, String altitudeConfidence) {
+    public PredictedPath(int deltaLatitude, int deltaLongitude, int deltaAltitude, int altitudeConfidence) {
         this.deltaLatitude = deltaLatitude;
         this.deltaLongitude = deltaLongitude;
         this.deltaAltitude = deltaAltitude;
@@ -32,19 +32,19 @@ public class PredictedPath {
         this.deltaLongitude = deltaLongitude;
     }
 
-    public String getDeltaAltitude() {
+    public int getDeltaAltitude() {
         return deltaAltitude;
     }
 
-    public void setDeltaAltitude(String deltaAltitude) {
+    public void setDeltaAltitude(int deltaAltitude) {
         this.deltaAltitude = deltaAltitude;
     }
 
-    public String getAltitudeConfidence() {
+    public int getAltitudeConfidence() {
         return altitudeConfidence;
     }
 
-    public void setAltitudeConfidence(String altitudeConfidence) {
+    public void setAltitudeConfidence(int altitudeConfidence) {
         this.altitudeConfidence = altitudeConfidence;
     }
 

@@ -30,8 +30,10 @@ public class RESTRequestEventManager {
         RestClient restClient = RestClient.create();
         ResponseEntity responseEntity = restClient
                 .get()
-                .uri("http://localhost:8082/data")
+                .uri("http://192.168.43.2:5000/entities")
                 .retrieve().toEntity(String.class);
+
+        //System.out.println(responseEntity.toString());
 
         if(responseEntity.getStatusCode().value() != 200){
             return;

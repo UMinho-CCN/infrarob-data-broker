@@ -41,9 +41,9 @@ public class MqttInternalConnectionShare {
             this.mqttClient = new MqttClient(brokerURL, UUID.randomUUID().toString());
             connectMQTT();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         } catch (MqttException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }
@@ -56,7 +56,7 @@ public class MqttInternalConnectionShare {
         try {
             mqttClient.connect(options);
         } catch (MqttException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +64,7 @@ public class MqttInternalConnectionShare {
         try {
             mqttClient.publish(topic, mqttMessage);
         } catch (MqttException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

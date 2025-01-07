@@ -105,10 +105,11 @@ public class RPAObject {
         internalObjectData.setVehicleID(this.get_id());
         internalObjectData.setSpeed((int)(this.getVelocity()[0]));
         internalObjectData.setSpeedConfidence(this.getVel_conf());
-        internalObjectData.setLat((int)((this.getPosition()[0])*(double)1000000));
-        internalObjectData.setLon((int)((this.getPosition()[1])*(double)1000000));
+        internalObjectData.setLat((int)((this.getPosition()[0])*(double)10000000));
+        internalObjectData.setLon((int)((this.getPosition()[1])*(double)10000000));
         internalObjectData.setLatConfidence(this.getPos_conf());
         internalObjectData.setLonConfidence(this.getPos_conf());
+        //internalObjectData.setVehicleType(this.);
         return internalObjectData;
     }
 }

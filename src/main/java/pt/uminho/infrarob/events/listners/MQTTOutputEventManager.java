@@ -42,7 +42,7 @@ public class MQTTOutputEventManager {
             MqttMessage mqttMessage = new MqttMessage(mapper.writeValueAsString(proto2Objects).getBytes(StandardCharsets.UTF_8));
             MqttInternalConnectionShare.getInstance().publishToClient(mqttMessage);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }

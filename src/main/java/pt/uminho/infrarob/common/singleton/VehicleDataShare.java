@@ -6,18 +6,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class VehicleDataShare {
 
 
-    private Map<String, InternalObjectData> vehiclePositionMap;
+    private ConcurrentHashMap<String, InternalObjectData> vehiclePositionMap;
     private static VehicleDataShare instance = null;
-
     private VehicleDataShare() {
-        vehiclePositionMap = new HashMap<>();
+        vehiclePositionMap = new ConcurrentHashMap<>();
     }
 
     public static VehicleDataShare getInstance(){

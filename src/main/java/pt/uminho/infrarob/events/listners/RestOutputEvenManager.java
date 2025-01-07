@@ -44,7 +44,7 @@ public class RestOutputEvenManager {
 
         RestClient restClient = RestClient.create();
         try {
-            System.out.println("REST REQUEST: " + REST_URI);
+            //System.out.println("REST REQUEST: " + REST_URI);
             ResponseEntity responseEntity = restClient
                     .post()
                     .uri(REST_URI)
@@ -52,9 +52,9 @@ public class RestOutputEvenManager {
                     .header("Authorization", "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiaW5mcmFyb2JfdXNlcnMiLCJ1c2VyIjoidjJ4X3VzZXIifQ.kV39NUCvYcqAWVueDbNpv1VxeT1dYqitngzSwoLuYdY")
                     .contentType(MediaType.APPLICATION_JSON)
                     .retrieve().toBodilessEntity();
-            System.out.println("REST: " + responseEntity.getStatusCode());
+            //System.out.println("REST: " + responseEntity.getStatusCode());
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

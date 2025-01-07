@@ -1,20 +1,20 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class EventType {
-    private String ccAndScc;
+    private DenmCCAndSCC ccAndScc;
 
     public EventType() {
     }
 
-    public EventType(String ccAndScc) {
+    public EventType(DenmCCAndSCC ccAndScc) {
         this.ccAndScc = ccAndScc;
     }
 
-    public String getCcAndScc() {
+    public DenmCCAndSCC getCcAndScc() {
         return ccAndScc;
     }
 
-    public void setCcAndScc(String ccAndScc) {
+    public void setCcAndScc(DenmCCAndSCC ccAndScc) {
         this.ccAndScc = ccAndScc;
     }
 

@@ -50,6 +50,14 @@ public class V2XInputEventManager {
     @EventListener
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public void handleForwarding(V2XMessageReceivedEvent message){
+        if (Math.abs(message.getVehiclePosition().getLat()) < 1){
+            return;
+        }
+
+        if (Math.abs(message.getVehiclePosition().getLon()) < 1){
+            return;
+        }
+
         InternalObjectData internalObjectData = message.getVehiclePosition();
         VehicleDataShare.getInstance().addVehiclePosition(internalObjectData);
 
@@ -160,7 +168,7 @@ public class V2XInputEventManager {
                     100
             ));
             data.addObject(message.getVehiclePosition());
-            applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
+            //applicationEventPublisher.publishEvent(new V2xMessageOutputEvent(this, data));
         }
     }
 

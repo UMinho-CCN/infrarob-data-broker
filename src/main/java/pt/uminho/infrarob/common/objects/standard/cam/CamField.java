@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class CamField {
-    @JsonProperty("GenerationDeltaTime")
+    @JsonProperty("generationDeltaTime")
     private long generationDeltaTime;
-    @JsonProperty("CamParameters")
+    @JsonProperty("camParameters")
     private CAMParameters camParameters;
 
     public CamField() {

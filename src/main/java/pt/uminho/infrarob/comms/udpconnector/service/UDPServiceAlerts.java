@@ -42,7 +42,7 @@ public class UDPServiceAlerts {
             InternalEventData eventData = proto1Alert.toInternalEventDatA();
             eventData.setOrigin("RPAS");
             internalObjectData.addEvents(eventData);
-
+            System.out.println("WARNING RECEIVED: " + data);
             V2xMessageOutputEvent outputEvent = new V2xMessageOutputEvent(this, internalObjectData);
 
             applicationEventPublisher.publishEvent(outputEvent);

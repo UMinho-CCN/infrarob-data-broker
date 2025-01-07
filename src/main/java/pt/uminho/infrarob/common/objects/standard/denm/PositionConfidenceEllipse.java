@@ -1,40 +1,40 @@
 package pt.uminho.infrarob.common.objects.standard.denm;
 
 public class PositionConfidenceEllipse {
-    private String semiMajorConfidence;
-    private String semiMinorConfidence;
-    private String semiMajorOrientation;
+    private int semiMajorConfidence;
+    private int semiMinorConfidence;
+    private int semiMajorOrientation;
 
     public PositionConfidenceEllipse() {
     }
 
-    public PositionConfidenceEllipse(String semiMajorConfidence, String semiMinorConfidence, String semiMajorOrientation) {
+    public PositionConfidenceEllipse(int semiMajorConfidence, int semiMinorConfidence, int semiMajorOrientation) {
         this.semiMajorConfidence = semiMajorConfidence;
         this.semiMinorConfidence = semiMinorConfidence;
         this.semiMajorOrientation = semiMajorOrientation;
     }
 
-    public String getSemiMajorConfidence() {
+    public int getSemiMajorConfidence() {
         return semiMajorConfidence;
     }
 
-    public void setSemiMajorConfidence(String semiMajorConfidence) {
+    public void setSemiMajorConfidence(int semiMajorConfidence) {
         this.semiMajorConfidence = semiMajorConfidence;
     }
 
-    public String getSemiMinorConfidence() {
+    public int getSemiMinorConfidence() {
         return semiMinorConfidence;
     }
 
-    public void setSemiMinorConfidence(String semiMinorConfidence) {
+    public void setSemiMinorConfidence(int semiMinorConfidence) {
         this.semiMinorConfidence = semiMinorConfidence;
     }
 
-    public String getSemiMajorOrientation() {
+    public int getSemiMajorOrientation() {
         return semiMajorOrientation;
     }
 
-    public void setSemiMajorOrientation(String semiMajorOrientation) {
+    public void setSemiMajorOrientation(int semiMajorOrientation) {
         this.semiMajorOrientation = semiMajorOrientation;
     }
 
